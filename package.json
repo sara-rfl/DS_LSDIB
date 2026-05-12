@@ -1,0 +1,31 @@
+{
+  "name": "ds_lsdib",
+  "version": "1.0.0",
+  "description": "Projeto desenvolvido no âmbito da disciplina de **Desenvolvimento de Software em Saúde (DSS)** — FMUP.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sara-rfl/DS_LSDIB.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/sara-rfl/DS_LSDIB/issues"
+  },
+  "homepage": "https://github.com/sara-rfl/DS_LSDIB#readme",
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.7.0",
+    "nodemon": "^3.1.14",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
