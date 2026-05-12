@@ -112,3 +112,10 @@ node dist/app.js
 - **ts-node** — Execução direta de TypeScript sem compilação prévia
 
 
+###Scripts e Comandos
+
+  Script | Comando           | Uso                         |
+|--------|-------------------|-----------------------------------|
+| dev    | npm run dev       | Desenvolvimento                   |
+| build  | npm run build     | Compilar TypeScript               |
+| start  | npm start         | Produção |
