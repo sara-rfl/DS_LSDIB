@@ -40,6 +40,12 @@ DS_LSDIB/
 - [Node.js](https://nodejs.org/) (verificar com `node -v`)
 - npm (verificar com `npm -v`)
 
+
+#Setup Base de Dados
+
+npm install better-sqlite3
+npm install -D @types/better-sqlite3
+
 ## Instalação
 
 ```bash
@@ -104,3 +110,5 @@ node dist/app.js
 - **React 18** — Biblioteca para construção da interface (carregada via CDN)
 - **nodemon** — Auto-reload em desenvolvimento
 - **ts-node** — Execução direta de TypeScript sem compilação prévia
+
+
