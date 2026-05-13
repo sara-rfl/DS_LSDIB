@@ -2,43 +2,46 @@
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     // File Layout
-    "rootDir": "./src",
+    "rootDir": "./",
     "outDir": "./dist",
 
+    "target": "ES6",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+
     // Environment Settings
-    // See also https://aka.ms/tsconfig/module
-    "module": "nodenext",
-    "target": "esnext",
-    "types": [],
-    // For nodejs:
-    // "lib": ["esnext"],
-    // "types": ["node"],
+    // "types": ["node"], // Uncomment if needed
+    // "lib": ["esnext"], // Uncomment if needed
+    // "types": ["node"], // Uncomment if needed
     // and npm install -D @types/node
 
     // Other Outputs
-    "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
+    // "sourceMap": true, // Uncomment if needed
+    // "declaration": true, // Uncomment if needed
+    // "declarationMap": true, // Uncomment if needed
 
     // Stricter Typechecking Options
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
+    // "noUncheckedIndexedAccess": true, // Uncomment if needed
+    // "exactOptionalPropertyTypes": true, // Uncomment if needed
 
     // Style Options
-    // "noImplicitReturns": true,
-    // "noImplicitOverride": true,
-    // "noUnusedLocals": true,
-    // "noUnusedParameters": true,
-    // "noFallthroughCasesInSwitch": true,
-    // "noPropertyAccessFromIndexSignature": true,
+    // "noImplicitReturns": true, // Uncomment if needed
+    // "noImplicitOverride": true, // Uncomment if needed
+    // "noUnusedLocals": true, // Uncomment if needed
+    // "noUnusedParameters": true, // Uncomment if needed
+    // "noFallthroughCasesInSwitch": true, // Uncomment if needed
+    // "noPropertyAccessFromIndexSignature": true, // Uncomment if needed
 
     // Recommended Options
-    "strict": true,
-    "jsx": "react-jsx",
-    "verbatimModuleSyntax": false,
-    "isolatedModules": true,
-    "noUncheckedSideEffectImports": true,
-    "moduleDetection": "force",
-    "skipLibCheck": true,
-  }
+    // "jsx": "react-jsx", // Uncomment if needed
+    // "verbatimModuleSyntax": false, // Uncomment if needed
+    // "isolatedModules": true, // Uncomment if needed
+    // "noUncheckedSideEffectImports": true, // Uncomment if needed
+    // "moduleDetection": "force", // Uncomment if needed
+  },
+
+  "include": ["./**/*.ts"],
+  "exclude": ["./dist"]
 }

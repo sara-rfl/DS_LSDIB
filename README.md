@@ -18,8 +18,11 @@ DS_LSDIB/
 │   │   ├── middleware/       # auth, validação, logs
 │   │   └── config/          # limiares, variáveis de ambiente
 │   ├── db/
-│   │   ├── migrations/      # criação das tabelas
-│   │   └── seeds/           # dados simulados
+│   │   ├── migrations/       # criação das tabelas
+│   │         ├── tablesProfiles/   # criação das tabelas para os perfis
+│   │         ├── tablesMed/        # criação das tabelas para os Avaliação CARAT, Sintoma,    Medicação e Exame
+│   │         ├── tablesSystem/     # criação das tabelas para os configurações de Sistema
+│   │   └── seeds/            # dados simulados
 │   └── tests/
 │       ├── unit/
 │       └── integration/
