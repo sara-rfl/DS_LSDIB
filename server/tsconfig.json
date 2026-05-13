@@ -35,11 +35,11 @@
     // "noPropertyAccessFromIndexSignature": true, // Uncomment if needed
 
     // Recommended Options
-    // "jsx": "react-jsx", // Uncomment if needed
-    // "verbatimModuleSyntax": false, // Uncomment if needed
-    // "isolatedModules": true, // Uncomment if needed
-    // "noUncheckedSideEffectImports": true, // Uncomment if needed
-    // "moduleDetection": "force", // Uncomment if needed
+    "jsx": "react-jsx", // Uncomment if needed
+    "verbatimModuleSyntax": false, // Uncomment if needed
+    "isolatedModules": true, // Uncomment if needed
+    "noUncheckedSideEffectImports": true, // Uncomment if needed
+     "moduleDetection": "force", // Uncomment if needed
   },
 
   "include": ["./**/*.ts"],

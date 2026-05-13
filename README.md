@@ -75,6 +75,14 @@ npx tsc
 node dist/app.js
 ```
 
+
+### Desenvolvimento com base de dados
+> Em cada nova sessão que seja necessário correr a base de dados, após uma primeira execução é necessário correr os seguintes comandos nesta ordem:
+
+rm server/db/database.db
+npx ts-node db/initDatabase.ts
+
+
 > O servidor arranca em **<http://localhost:3000>**
 
 > A interface React fica disponível em **<http://localhost:3000>** (mesma porta — servida directamente pelo Express)
