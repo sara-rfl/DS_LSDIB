@@ -4,45 +4,66 @@ db.exec(`
 
     CREATE TABLE IF NOT EXISTS avaliacaoCarat (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    utenteId INTEGER NOT NULL,
-    respostas TEXT,
-    scoreTotal NUMBER,
-    nivelControlo TEXT,
-    recomendacoes TEXT,
-    criadoEm DATETIME,
-    FOREIGN KEY (utenteId) REFERENCES utentes(id)
+    utenteId   INTEGER,
+    dataAvaliacao DATETIME,
+    scoreAsma       INTEGER,
+    scoreRinite     INTEGER,
+    scoreTotal      INTEGER,
+    proximaAvaliacaoSugerida    DATE,
+    observacoes     TEXT,
+    FOREIGN KEY (utenteId) REFERENCES utente(id) ON DELETE SET NULL
     );
 
-    CREATE TABLE IF NOT EXISTS sintoma (
+    CREATE TABLE IF NOT EXISTS sintomaReportado (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    utenteId INTEGER NOT NULL,
+    utenteId INTEGER,
     descricao TEXT,
-    gravidade TEXT,
-    data DATETIME,
-    fonte TEXT,
-    criadoPor TEXT,
-    FOREIGN KEY (utenteId) REFERENCES utentes(id)
+    gravidade INTEGER,
+    dataInicioSintoma DATE,
+    dataRegisto   DATETIME,
+    tipo        VARCHAR(50)
     );
 
     CREATE TABLE IF NOT EXISTS medicacao (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    utenteId INTEGER NOT NULL,
-    nome TEXT,
-    dose TEXT,
+    utenteId INTEGER,
+    medicoId INTEGER,
+    nome VARCHAR(255),
+    dose VARCHAR(100),
     dataInicio DATETIME,
     dataFim DATETIME,
-    fonte TEXT,
-    criadoPor TEXT,
-    FOREIGN KEY (utenteId) REFERENCES utentes(id)
+    FOREIGN KEY (utenteId) REFERENCES utente(id) ON DELETE SET NULL,
+    FOREIGN KEY (medicoId) REFERENCES medico(id) ON DELETE SET NULL
+    );
+
+
+    CREATE TABLE IF NOT EXISTS tipoExame (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome VARCHAR(100),
+    descricao TEXT,
+    ativo INTEGER NOT NULL DEFAULT 1 CHECK (ativo IN (0, 1))
     );
 
     CREATE TABLE IF NOT EXISTS exame (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    utenteId INTEGER NOT NULL,
-    tipo TEXT,
+    utenteId INTEGER,
+    medicoId INTEGER,
+    tipoExameId INTEGER,
     data DATETIME,
     resultado TEXT,
-    FOREIGN KEY (utenteId) REFERENCES utentes(id)
+    observacoes TEXT,
+    FOREIGN KEY (utenteId) REFERENCES utente(id) ON DELETE SET NULL,
+    FOREIGN KEY (medicoId) REFERENCES medico(id) ON DELETE SET NULL,
+    FOREIGN KEY (tipoExameId) REFERENCES tipoExame(id) ON DELETE SET NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS respostaCarat (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    avaliacaoCaratId    INTEGER,
+    nPergunta   INTEGER,
+    valorResposta   INTEGER,
+    seccao      VARCHAR(10),
+    FOREIGN KEY (avaliacaoCaratId) REFERENCES avaliacaoCarat(id) ON DELETE SET NULL
     );
 
 `);
