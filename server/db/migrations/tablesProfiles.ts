@@ -15,7 +15,6 @@ db.exec(`
   CREATE TABLE IF NOT EXISTS medico (
     id            INTEGER PRIMARY KEY AUTOINCREMENT,
     utilizadorId  INTEGER NOT NULL,
-    nome          VARCHAR(20),
     especialidade VARCHAR(100)    NOT NULL,
     telefone      INTEGER   NOT NULL,
     nrOrdem       INTEGER   NOT NULL,
@@ -27,7 +26,6 @@ db.exec(`
     utilizadorId INTEGER NOT NULL,
     medicoId     INTEGER,
     nUtente      INTEGER NOT NULL,
-    nome         VARCHAR(20),
     dataNascimento DATE,
     telefone       INTEGER,
     morada        TEXT,
