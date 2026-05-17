@@ -22,9 +22,9 @@ const insertAlerta = db.prepare(`
 `);
 
 const alertas = [
-    { utenteId: 1, medicoId: 1, avaliacaoCaratId: 3, tipo: 'DETERIORACAO_CLINICA', prioridade: 'alta', estado: 'Ativo', motivo: 'Queda abrupta de 11 pontos no score total do CARAT entre avaliações consecutivas.', atualizadoEm: '2026-05-01 10:00:00', criadoEm: '2026-05-01 10:00:00' }, 
-    { utenteId: 2, medicoId: 2, avaliacaoCaratId: 5, tipo: 'CONTROLO_INSUFICIENTE', prioridade: 'media', estado: 'Ativo', motivo: 'Score total do CARAT persistente em 10 pontos (abaixo do limiar de controlo de 24).', atualizadoEm: '2026-05-15 14:30:00', criadoEm: '2026-05-15 14:30:00' }, 
-    { utenteId: 4, medicoId: 1, avaliacaoCaratId: 8, tipo: 'REVISAO_TERAPEUTICA', prioridade: 'alta', estado: 'Ativo', motivo: 'Sintomas graves persistentes (Score: 6) em utente com medicação ativa há mais de 15 dias.', atualizadoEm: '2026-05-14 09:15:00', criadoEm: '2026-05-14 09:15:00' }
+    { utenteId: 1, medicoId: 1, avaliacaoCaratId: 3, tipo: 'DETERIORACAO_CLINICA', prioridade: 1, estado: 'Novo', motivo: 'Queda abrupta de 11 pontos no score total do CARAT entre avaliações consecutivas.', atualizadoEm: '2026-05-01 10:00:00', criadoEm: '2026-05-01 10:00:00' }, 
+    { utenteId: 2, medicoId: 2, avaliacaoCaratId: 5, tipo: 'CONTROLO_INSUFICIENTE', prioridade: 2, estado: 'Novo', motivo: 'Score total do CARAT persistente em 10 pontos (abaixo do limiar de controlo de 24).', atualizadoEm: '2026-05-15 14:30:00', criadoEm: '2026-05-15 14:30:00' }, 
+    { utenteId: 4, medicoId: 1, avaliacaoCaratId: 8, tipo: 'REVISAO_TERAPEUTICA', prioridade: 3, estado: 'Novo', motivo: 'Sintomas graves persistentes (Score: 6) em utente com medicação ativa há mais de 15 dias.', atualizadoEm: '2026-05-14 09:15:00', criadoEm: '2026-05-14 09:15:00' }
 ];
 
 alertas.forEach(alerta => { 

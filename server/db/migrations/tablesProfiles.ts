@@ -25,7 +25,7 @@ db.exec(`
     id           INTEGER PRIMARY KEY AUTOINCREMENT,
     utilizadorId INTEGER NOT NULL,
     medicoId     INTEGER,
-    nUtente      INTEGER NOT NULL,
+    nUtente      INTEGER NOT NULL CHECK (nUtente BETWEEN 100000000 AND 999999999),
     dataNascimento DATE,
     telefone       INTEGER,
     morada        TEXT,

@@ -6,9 +6,9 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     utenteId   INTEGER,
     dataAvaliacao DATETIME,
-    scoreAsma       INTEGER,
-    scoreRinite     INTEGER,
-    scoreTotal      INTEGER,
+    scoreAsma       INTEGER CHECK (scoreAsma BETWEEN 0 AND 18),
+    scoreRinite     INTEGER CHECK (scoreRinite BETWEEN 0 AND 12),
+    scoreTotal      INTEGER CHECK (scoreTotal BETWEEN 0 AND 30),
     proximaAvaliacaoSugerida    DATE,
     observacoes     TEXT,
     FOREIGN KEY (utenteId) REFERENCES utente(id) ON DELETE SET NULL
@@ -18,7 +18,7 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     utenteId INTEGER,
     descricao TEXT,
-    gravidade INTEGER,
+    gravidade INTEGER CHECK(gravidade IN (1, 2, 3)),
     dataInicioSintoma DATE,
     dataRegisto   DATETIME,
     tipo        VARCHAR(50)
@@ -60,8 +60,8 @@ db.exec(`
     CREATE TABLE IF NOT EXISTS respostaCarat (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     avaliacaoCaratId    INTEGER,
-    nPergunta   INTEGER,
-    valorResposta   INTEGER,
+    nPergunta   INTEGER CHECK (nPergunta BETWEEN 1 AND 10),
+    valorResposta   INTEGER CHECK (valorResposta BETWEEN 0 AND 3),
     seccao      VARCHAR(10),
     FOREIGN KEY (avaliacaoCaratId) REFERENCES avaliacaoCarat(id) ON DELETE SET NULL
     );

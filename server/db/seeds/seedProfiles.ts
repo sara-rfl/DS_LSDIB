@@ -1,5 +1,5 @@
 import db from '../../src/config/database';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 
 
@@ -13,9 +13,9 @@ const utilizadores = [
   {email: 'marianapinto@clinic.pt', passwordHash: bcrypt.hashSync('password234',10), nome: 'Mariana Pinto', perfil: 'medico', criadoEm: new Date(2025,  2, 15, 14, 32, 47).toISOString()},
   {email: 'mariasilva@clinic.pt', passwordHash: bcrypt.hashSync('password345',10), nome: 'Maria Silva', perfil: 'utente', criadoEm: new Date(2024, 10,  7, 12, 35, 23).toISOString()},
   {email: 'jorgegoncalvez@clinic.pt', passwordHash: bcrypt.hashSync('password456',10), nome: 'Jorge Gonçalvez', perfil: 'utente', criadoEm: new Date(2025,  5, 23,  9, 42,  0).toISOString()},
-  {email: 'paulajacinto@clinic.pt',   passwordHash: bcrypt.hashSync('password567', 10), nome: 'Paula Jacinto',            perfil: 'utente', criadoEm: new Date(2025, 11, 11, 16, 17, 22).toISOString()},
-  {email: 'rosasantos@clinic.pt',     passwordHash: bcrypt.hashSync('password678', 10), nome: 'Rosa Santos',              perfil: 'utente', criadoEm: new Date(2025,  0, 11, 15, 57,  2).toISOString()},
-  {email: 'admin.suporte@clinic.pt',  passwordHash: bcrypt.hashSync('password789', 10), nome: 'Administrador do Sistema', perfil: 'admin',  criadoEm: new Date(2025,  0,  1,  0,  0,  0).toISOString()},
+  {email: 'paulajacinto@clinic.pt',  passwordHash: bcrypt.hashSync('password567', 10), nome: 'Paula Jacinto',            perfil: 'utente', criadoEm: new Date(2025,  0, 11, 15, 57,  2).toISOString()},
+  {email: 'rosasantos@clinic.pt',    passwordHash: bcrypt.hashSync('password678', 10), nome: 'Rosa Santos',              perfil: 'utente', criadoEm: new Date(2025,  0, 11, 15, 57,  2).toISOString()},
+  {email: 'admin.suporte@clinic.pt', passwordHash: bcrypt.hashSync('password789', 10), nome: 'Administrador do Sistema', perfil: 'admin',  criadoEm: new Date(2025,  0,  1,  0,  0,  0).toISOString()},
 ];
 
 utilizadores.forEach(utilizador => {
@@ -51,10 +51,10 @@ const insertUtentes = db.prepare(`
 `);
 
 const utentes = [
-  {utilizadorId: 3, medicoId: 1, nUtente: 1001, dataNascimento: '1985-06-15', telefone: '967330295', morada: 'Rua de Cedofeita, nº 248, 2º Traseiras', genero: 'feminino'},
-  {utilizadorId: 4, medicoId: 1, nUtente: 1002, dataNascimento: '1990-09-20', telefone: '924117842', morada: 'Avenida do Brasil, nº 710, 4º Esq.',      genero: 'masculino'},
-  {utilizadorId: 5, medicoId: 2, nUtente: 1003, dataNascimento: '1978-12-05', telefone: '919554023', morada: 'Rua de Júlio Dinis, nº 512, 5º Dto.',      genero: 'feminino'},
-  {utilizadorId: 6, medicoId: 2, nUtente: 1004, dataNascimento: '2000-03-10', telefone: '961008767', morada: 'Rua da Estação, nº 15, r/c Centro, 4º Esq.', genero: 'feminino'},
+  {utilizadorId: 3, medicoId: 1, nUtente: 123456789, dataNascimento: '1985-06-15', telefone: '967330295', morada: 'Rua de Cedofeita, nº 248, 2º Traseiras', genero: 'feminino'},
+  {utilizadorId: 4, medicoId: 1, nUtente: 234567891, dataNascimento: '1990-09-20', telefone: '924117842', morada: 'Avenida do Brasil, nº 710, 4º Esq.',      genero: 'masculino'},
+  {utilizadorId: 5, medicoId: 2, nUtente: 345678912, dataNascimento: '1978-12-05', telefone: '919554023', morada: 'Rua de Júlio Dinis, nº 512, 5º Dto.',      genero: 'feminino'},
+  {utilizadorId: 6, medicoId: 2, nUtente: 456789123, dataNascimento: '2000-03-10', telefone: '961008767', morada: 'Rua da Estação, nº 15, r/c Centro, 4º Esq.', genero: 'feminino'},
 ];
 
 utentes.forEach(utente => {
