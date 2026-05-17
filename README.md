@@ -42,6 +42,7 @@ DS_LSDIB/
 
 - [Node.js](https://nodejs.org/) (verificar com `node -v`)
 - npm (verificar com `npm -v`)
+- npm run install:all
 
 
 #Setup Base de Dados

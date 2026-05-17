@@ -4,6 +4,7 @@
   "description": "Projeto desenvolvido no âmbito da disciplina de **Desenvolvimento de Software em Saúde (DSS)** — FMUP.",
   "main": "index.js",
   "scripts": {
+    "install:all": "npm install && cd server && npm install",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -29,9 +30,12 @@
     "typescript": "^6.0.3"
   },
   "dependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",
     "better-sqlite3": "^12.10.0",
-    "express": "^5.2.1"
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3"
   }
 }
