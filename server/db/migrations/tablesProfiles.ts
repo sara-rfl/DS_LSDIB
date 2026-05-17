@@ -8,7 +8,7 @@ db.exec(`
     email        VARCHAR(255)     NOT NULL UNIQUE,
     passwordHash VARCHAR(255)    NOT NULL,
     nome         VARCHAR(255) NOT NULL,
-    perfil       VARCHAR(10)     NOT NULL CHECK(perfil IN ('utente', 'medico')),
+    perfil       VARCHAR(10)     NOT NULL CHECK(perfil IN ('admin','utente', 'medico')),
     criadoEm    DATETIME
   );
 

@@ -1,18 +1,18 @@
 import db from '../../src/config/database';
 
 const insertConfigLimiar = db.prepare(`
-  INSERT INTO configuracaoLimiar (chave, valor, descricao) VALUES (?, ?,?)
+  INSERT INTO configuracaoLimiar (atualizadoPor, chave, valor, descricao) VALUES (?,?, ?,?)
 `);
 
 const limiares = [
-    { chave: 'limiarControloInsuficiente', valor: 24, descricao: 'Pontuação limite. Valores <= 24 indicam que a asma/rinite não estão controladas.'},
-    { chave: 'deltaDeterioracao', valor: 4, descricao: 'Variação negativa mínima entre avaliações para considerar um agravamento clínico importante.'},
-    { chave: 'scoreMaximoPossivel', valor: 30, descricao: 'Pontuação máxima do CARAT (controlo absoluto).'},
-    { chave: 'scoreMinimoPossivel', valor: 0, descricao: 'Pontuação mínima do CARAT.'},
+    { atualizadoPor: 7 ,chave: 'limiarControloInsuficiente', valor: 24, descricao: 'Pontuação limite. Valores <= 24 indicam que a asma/rinite não estão controladas.'},
+    { atualizadoPor: 7, chave: 'deltaDeterioracao', valor: 4, descricao: 'Variação negativa mínima entre avaliações para considerar um agravamento clínico importante.'},
+    { atualizadoPor: 7, chave: 'scoreMaximoPossivel', valor: 30, descricao: 'Pontuação máxima do CARAT (controlo absoluto).'},
+    { atualizadoPor: 7, chave: 'scoreMinimoPossivel', valor: 0, descricao: 'Pontuação mínima do CARAT.'},
   ];
 
 limiares.forEach(limiar => {
-  insertConfigLimiar.run(limiar.chave, limiar.valor, limiar.descricao);
+  insertConfigLimiar.run(limiar.atualizadoPor, limiar.chave, limiar.valor, limiar.descricao);
 });
 
 
