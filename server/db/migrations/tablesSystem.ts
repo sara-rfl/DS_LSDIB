@@ -3,9 +3,11 @@ import db from '../../src/config/database';
 db.exec(`
   CREATE TABLE IF NOT EXISTS configuracaoLimiar (
    id INTEGER PRIMARY KEY AUTOINCREMENT,
+   atualizadoPor INTEGER,
    chave VARCHAR(50),
    valor NUMERIC(19,0),
-   descricao TEXT
+   descricao TEXT,
+   FOREIGN KEY (atualizadoPor) REFERENCES utilizador(id) ON DELETE SET NULL
   );
 
   CREATE TABLE IF NOT EXISTS alerta (

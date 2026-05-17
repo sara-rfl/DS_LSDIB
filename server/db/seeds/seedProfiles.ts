@@ -13,8 +13,9 @@ const utilizadores = [
   {email: 'marianapinto@clinic.pt', passwordHash: bcrypt.hashSync('password234',10), nome: 'Mariana Pinto', perfil: 'medico', criadoEm: new Date(2025,  2, 15, 14, 32, 47).toISOString()},
   {email: 'mariasilva@clinic.pt', passwordHash: bcrypt.hashSync('password345',10), nome: 'Maria Silva', perfil: 'utente', criadoEm: new Date(2024, 10,  7, 12, 35, 23).toISOString()},
   {email: 'jorgegoncalvez@clinic.pt', passwordHash: bcrypt.hashSync('password456',10), nome: 'Jorge Gonçalvez', perfil: 'utente', criadoEm: new Date(2025,  5, 23,  9, 42,  0).toISOString()},
-  {email: 'paulajacinto@clinic.pt', passwordHash: bcrypt.hashSync('password567',10), nome: 'Paula Jacinto', perfil: 'utente', criadoEm: new Date(2025, 11, 11, 16, 17, 22).toISOString()},
-  {email: 'rosasantos@clinic.pt', passwordHash: bcrypt.hashSync('password678',10), nome: 'Rosa Santos', perfil: 'utente', criadoEm: new Date(2025,  0, 11, 15, 57,  2).toISOString()},
+  {email: 'paulajacinto@clinic.pt',   passwordHash: bcrypt.hashSync('password567', 10), nome: 'Paula Jacinto',            perfil: 'utente', criadoEm: new Date(2025, 11, 11, 16, 17, 22).toISOString()},
+  {email: 'rosasantos@clinic.pt',     passwordHash: bcrypt.hashSync('password678', 10), nome: 'Rosa Santos',              perfil: 'utente', criadoEm: new Date(2025,  0, 11, 15, 57,  2).toISOString()},
+  {email: 'admin.suporte@clinic.pt',  passwordHash: bcrypt.hashSync('password789', 10), nome: 'Administrador do Sistema', perfil: 'admin',  criadoEm: new Date(2025,  0,  1,  0,  0,  0).toISOString()},
 ];
 
 utilizadores.forEach(utilizador => {
@@ -28,6 +29,7 @@ utilizadores.forEach(utilizador => {
 // Jorge,   Utente -> utilizadorId = 4
 // Paula,   Utente -> utilizadorId = 5
 // Rosa,    Utente -> utilizadorId = 6
+// Admin,   Admin  -> utilizadorId = 7
 
 const insertMedico = db.prepare(`
   INSERT INTO medico (utilizadorId, especialidade, telefone, nrOrdem)
