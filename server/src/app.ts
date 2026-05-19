@@ -6,6 +6,8 @@ import { errorHandler } from './middleware/errorHandler';
 import authRoutes from './routes/authRoutes';
 import patientRoutes from './routes/patientRoutes';
 import doctorRoutes from './routes/doctorRoutes';
+import configRoutes from './routes/configRoutes';
+import userRoutes from './routes/userRoutes';
 
 const app = express();
 
@@ -15,6 +17,8 @@ app.use(logger);
 app.use(authRoutes);
 app.use(patientRoutes);
 app.use(doctorRoutes);
+app.use(configRoutes);
+app.use(userRoutes);
 
 app.use(errorHandler);
 
