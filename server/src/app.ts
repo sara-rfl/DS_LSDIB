@@ -8,6 +8,7 @@ import patientRoutes from './routes/patientRoutes';
 import doctorRoutes from './routes/doctorRoutes';
 import configRoutes from './routes/configRoutes';
 import userRoutes from './routes/userRoutes';
+import caratRoutes from './routes/caratRoutes';
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(patientRoutes);
 app.use(doctorRoutes);
 app.use(configRoutes);
 app.use(userRoutes);
+app.use(caratRoutes);
 
 app.use(errorHandler);
 
