@@ -4,7 +4,7 @@ export function obterConfigs() {
   return db.prepare('SELECT * FROM configuracaoLimiar').all();
 }
 
-export function atualizarConfig(chave: string, valor: number) {
+export function atualizarConfig(chave: string, valor: number, atualizadoPor: number) {
   const config = db.prepare('SELECT * FROM configuracaoLimiar WHERE chave = ?').get(chave) as any;
 
   if (!config) {
@@ -13,6 +13,6 @@ export function atualizarConfig(chave: string, valor: number) {
     throw erro;
   }
 
-  db.prepare('UPDATE configuracaoLimiar SET valor = ? WHERE chave = ?').run(valor, chave);
+  db.prepare('UPDATE configuracaoLimiar SET valor = ?, atualizadoPor = ? WHERE chave = ?').run(valor, atualizadoPor, chave);
   return db.prepare('SELECT * FROM configuracaoLimiar WHERE chave = ?').get(chave);
 }

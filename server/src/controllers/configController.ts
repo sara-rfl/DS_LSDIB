@@ -15,6 +15,7 @@ export function atualizar(req: Request, res: Response, next: NextFunction) {
       erro.status = 400;
       return next(erro);
     }
-    res.json(configService.atualizarConfig(chave, Number(valor)));
+    const utilizadorId = (req as any).utilizador.id;
+    res.json(configService.atualizarConfig(chave, Number(valor), utilizadorId));
   } catch (erro) { next(erro); }
 }
