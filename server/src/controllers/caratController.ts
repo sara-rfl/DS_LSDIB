@@ -41,6 +41,7 @@ export function submeter(req: Request, res: Response, next: NextFunction) {
 export function historico(req: Request, res: Response, next: NextFunction) {
     try {
         const utenteId = Number(req.params.id);
+        obterUtente(utenteId);
         const avaliacoes = getHistorico(utenteId);
         res.json(avaliacoes);
     } catch (erro) { next(erro); }

@@ -1,5 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { listarAlertas, getAlertaPorId, atualizarEstadoAlerta, adicionarAcaoAlerta, getMedicoIdPorUtilizadorId } from '../services/alertaRepository';
+import { obterUtente } from '../services/patientService';
+
+const ESTADOS_VALIDOS = ['Novo', 'Visto', 'Em_Seguimento', 'Fechado'] as const;
+type EstadoAlerta = typeof ESTADOS_VALIDOS[number];
 
 export function listar (req: Request, res: Response, next: NextFunction) {
     const { utenteId, medicoId, estado } = req.query;
@@ -36,6 +40,12 @@ export function atualizarEstado(req: Request, res: Response, next: NextFunction)
     const { novoEstado } = req.body;
 
     try {
+        if (!ESTADOS_VALIDOS.includes(novoEstado as EstadoAlerta)) {
+            const erro: any = new Error(`Estado inválido. Valores permitidos: ${ESTADOS_VALIDOS.join(', ')}`);
+            erro.status = 400;
+            return next(erro);
+        }
+
         const alerta = getAlertaPorId(Number(id));
         if (!alerta) {
             res.status(404).json({ message: 'Alerta não encontrado' });
@@ -45,6 +55,15 @@ export function atualizarEstado(req: Request, res: Response, next: NextFunction)
         res.json({ mensagem: 'Estado atualizado' });
     }
     catch (erro) { next(erro); }
+}
+
+export function listarPorUtente(req: Request, res: Response, next: NextFunction) {
+    try {
+        const utenteId = Number(req.params.id);
+        obterUtente(utenteId);
+        const alertas = listarAlertas({ utenteId });
+        res.json(alertas);
+    } catch (erro) { next(erro); }
 }
 
 
