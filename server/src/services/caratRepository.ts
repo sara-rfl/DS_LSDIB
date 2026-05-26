@@ -45,3 +45,31 @@ export function getDelta(): number {
     if (!config) throw new Error('Configuração de limiar delta não encontrada');
     return config.valor;
 }
+
+export function getHistorico(utenteId: number) {
+    return db.prepare(`
+        SELECT id, utenteId, dataAvaliacao, scoreRinite, scoreAsma, scoreTotal
+        FROM avaliacaoCarat
+        WHERE utenteId = ?
+        ORDER BY dataAvaliacao DESC
+    `).all(utenteId);
+}
+
+export function getAvaliacaoById(avaliacaoId: number) {
+    const avaliacao = db.prepare(`
+        SELECT id, utenteId, dataAvaliacao, scoreRinite, scoreAsma, scoreTotal
+        FROM avaliacaoCarat
+        WHERE id = ?
+    `).get(avaliacaoId) as { id: number; utenteId: number; dataAvaliacao: string; scoreRinite: number; scoreAsma: number; scoreTotal: number } | undefined;
+
+    if (!avaliacao) return null;
+
+    const respostas = db.prepare(`
+        SELECT nPergunta, valorResposta, seccao
+        FROM respostaCarat
+        WHERE avaliacaoCaratId = ?
+        ORDER BY nPergunta
+    `).all(avaliacaoId);
+
+    return { ...avaliacao, respostas };
+}
