@@ -5,6 +5,8 @@ import { autorizar } from '../middleware/authorizationMiddleware';
 
 const router = Router();
 
-router.post('/api/carat/avaliacoes', autenticar, autorizar('utente', 'medico'), caratController.submeter);
+router.post('/patients/:id/carat', autenticar, autorizar('utente', 'medico'), caratController.submeter);
+router.get('/patients/:id/carat', autenticar, autorizar('utente', 'medico', 'admin'), caratController.historico);
+router.get('/carat/:evalId', autenticar, autorizar('utente', 'medico', 'admin'), caratController.getAvaliacao);
 
 export default router;
