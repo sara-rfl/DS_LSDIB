@@ -11,6 +11,7 @@ import userRoutes from './routes/userRoutes';
 import caratRoutes from './routes/caratRoutes';
 import alertaRoutes from './routes/alertaRoutes';
 import sintomaRoutes from './routes/sintomaRoutes';
+import medicacaoRoutes from './routes/medicacaoRoutes';
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(userRoutes);
 app.use(caratRoutes);
 app.use(alertaRoutes);
 app.use(sintomaRoutes);
+app.use(medicacaoRoutes);
 
 app.use(errorHandler);
 
