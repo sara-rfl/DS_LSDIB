@@ -58,3 +58,12 @@ export function eliminarMedico(id: number) {
   obterMedico(id);
   db.prepare('DELETE FROM utilizador WHERE id = (SELECT utilizadorId FROM medico WHERE id = ?)').run(id);
 }
+
+export function getMedicoIdPorUtilizadorId(utenteId: number): number | null {
+  const stmt = db.prepare(`
+      SELECT id FROM medico WHERE utilizadorId = ?
+  `);
+  const row = stmt.get(utenteId) as { id: number } | undefined;
+  return row?.id ?? null;
+
+}

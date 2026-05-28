@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { obterUtente } from '../services/patientService';
-import { getMedicoIdPorUtilizadorId } from '../services/alertaRepository';
+import { getMedicoIdPorUtilizadorId } from '../services/doctorService';
 import { guardarExame, listarExames, tipoExameExiste } from '../services/exameRepository';
 
 export function submeter(req: Request, res: Response, next: NextFunction) {

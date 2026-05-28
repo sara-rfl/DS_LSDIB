@@ -88,11 +88,3 @@ export function getAlertaPorId(alertaId: number) {
     return stmt.get(alertaId);
 }
 
-export function getMedicoIdPorUtilizadorId(utenteId: number): number | null {
-    const stmt = db.prepare(`
-        SELECT id FROM medico WHERE utilizadorId = ?
-    `);
-    const row = stmt.get(utenteId) as { id: number } | undefined;
-    return row?.id ?? null;
-
-}

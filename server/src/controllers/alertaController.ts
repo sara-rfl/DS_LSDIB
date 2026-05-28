@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { listarAlertas, getAlertaPorId, atualizarEstadoAlerta, adicionarAcaoAlerta, getMedicoIdPorUtilizadorId } from '../services/alertaRepository';
+import { listarAlertas, getAlertaPorId, atualizarEstadoAlerta, adicionarAcaoAlerta } from '../services/alertaRepository';
+import { getMedicoIdPorUtilizadorId } from '../services/doctorService'
 import { obterUtente } from '../services/patientService';
 
 const ESTADOS_VALIDOS = ['Novo', 'Visto', 'Em_Seguimento', 'Fechado'] as const;

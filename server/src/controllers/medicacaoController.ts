@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { getMedicoIdPorUtilizadorId } from '../services/alertaRepository';
+import { getMedicoIdPorUtilizadorId } from '../services/doctorService';
 import { obterUtente } from '../services/patientService';
 import { guardarMedicacao, listarMedicacao } from '../services/medicacaoRepository';
 
