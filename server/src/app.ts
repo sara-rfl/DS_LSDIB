@@ -12,6 +12,7 @@ import caratRoutes from './routes/caratRoutes';
 import alertaRoutes from './routes/alertaRoutes';
 import sintomaRoutes from './routes/sintomaRoutes';
 import medicacaoRoutes from './routes/medicacaoRoutes';
+import exameRoutes from './routes/exameRoutes'
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use(caratRoutes);
 app.use(alertaRoutes);
 app.use(sintomaRoutes);
 app.use(medicacaoRoutes);
+app.use (exameRoutes);
 
 app.use(errorHandler);
 
