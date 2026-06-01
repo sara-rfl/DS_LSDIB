@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema SauDInoB - Login</title>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Bem-vindo ao Sistema SauDInoB</h1>
+        <p>Insira as suas credenciais para aceder</p>
+        
+        <form id="loginForm">
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit">Entrar</button>
+        </form>
+        <p id="mensagemErro" style="color: red; display: none;"></p>
+    </div>
+
+<script type="module" src="./pages/login.js"></script></body>
+</html>
