@@ -2,10 +2,12 @@ import { Router } from "express";
 import * as medicacaoController from "../controllers/medicacaoController";
 import { autenticar } from "../middleware/authMiddleware";
 import { autorizar } from "../middleware/authorizationMiddleware";
+import { validateBody } from "../middleware/validateSchema";
+import { submeterMedicacaoSchema } from "../../../contracts/schemas";
 
 const router = Router();
 
 router.get('/patients/:id/medicacao', autenticar, autorizar('medico', 'utente'), medicacaoController.listar);
-router.post('/patients/:id/medicacao', autenticar, autorizar('medico'), medicacaoController.submeter);
+router.post('/patients/:id/medicacao', autenticar, autorizar('medico'), validateBody(submeterMedicacaoSchema), medicacaoController.submeter);
 
 export default router;  
