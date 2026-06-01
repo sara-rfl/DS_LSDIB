@@ -10,6 +10,10 @@ import doctorRoutes from './routes/doctorRoutes';
 import configRoutes from './routes/configRoutes';
 import userRoutes from './routes/userRoutes';
 import caratRoutes from './routes/caratRoutes';
+import alertaRoutes from './routes/alertaRoutes';
+import sintomaRoutes from './routes/sintomaRoutes';
+import medicacaoRoutes from './routes/medicacaoRoutes';
+import exameRoutes from './routes/exameRoutes'
 
 const app = express();
 
@@ -23,6 +27,10 @@ app.use(doctorRoutes);
 app.use(configRoutes);
 app.use(userRoutes);
 app.use(caratRoutes);
+app.use(alertaRoutes);
+app.use(sintomaRoutes);
+app.use(medicacaoRoutes);
+app.use (exameRoutes);
 
 app.use(errorHandler);
 
