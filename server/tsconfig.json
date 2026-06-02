@@ -10,9 +10,9 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-
+    "ignoreDeprecations": "6.0",
     // Environment Settings
-    // "types": ["node"], // Uncomment if needed
+    "types": ["node", "jest"],
     // "lib": ["esnext"], // Uncomment if needed
     // "types": ["node"], // Uncomment if needed
     // and npm install -D @types/node
