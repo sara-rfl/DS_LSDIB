@@ -3,25 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema SauDInoB - Pacientes</title>
+    <title>iCARAT - Pacientes</title>
     <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
     <nav class="top-nav">
-        <h2 class="logo">Sistema SauDInoB</h2>
-        <button id="btn-logout" class="btn-move-out">log out</button>
+        <h2 class="logo">iCARAT</h2>
+        <button id="btn-logout" class="btn-move-out">Log Out</button>
     </nav>
 
     <main class="container-lista">
-        <div class="header-lista" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h1>Lista de Utentes</h1>
+        <div class="header-lista">
+            <div class="header-esquerda">
+                <h1>Lista de Utentes</h1>
+                <span id="contagem-utentes" class="contagem-badge">—</span>
+            </div>
             <input type="text" id="pesquisa-utente" class="search-input" placeholder="Pesquisar por nome ou email...">
         </div>
-        
+
         <div id="tabela-container" class="card-tabela">
-            <p>A carregar dados clínicos...</p>
+            <p class="estado-mensagem">A carregar dados clínicos...</p>
         </div>
     </main>
+
+    <div id="modal-overlay" class="modal-overlay" style="display:none;">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-avatar" id="modal-avatar"></div>
+                <div>
+                    <h2 id="modal-nome"></h2>
+                    <p id="modal-email"></p>
+                </div>
+                <button id="modal-fechar" class="modal-fechar">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-campo">
+                    <span class="modal-label">Nº Utente</span>
+                    <span id="modal-nutente" class="modal-valor"></span>
+                </div>
+                <div class="modal-campo">
+                    <span class="modal-label">Data de Nascimento</span>
+                    <span id="modal-nascimento" class="modal-valor"></span>
+                </div>
+                <div class="modal-campo">
+                    <span class="modal-label">Género</span>
+                    <span id="modal-genero" class="modal-valor"></span>
+                </div>
+                <div class="modal-campo">
+                    <span class="modal-label">Telefone</span>
+                    <span id="modal-telefone" class="modal-valor"></span>
+                </div>
+                <div class="modal-campo">
+                    <span class="modal-label">Morada</span>
+                    <span id="modal-morada" class="modal-valor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script type="module" src="./pages/lista_utentes.js"></script>
 </body>
 </html>

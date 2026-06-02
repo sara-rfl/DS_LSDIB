@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iCARAT - Auditoria</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <nav class="top-nav">
+        <h2 class="logo">iCARAT</h2>
+        <button id="btn-logout" class="btn-move-out">Log Out</button>
+    </nav>
+
+    <main class="container-lista">
+        <div class="header-lista">
+            <div class="header-esquerda">
+                <h1>Registo de Auditoria</h1>
+                <span id="contagem-registos" class="contagem-badge">—</span>
+            </div>
+            <input type="text" id="pesquisa-audit" class="search-input" placeholder="Filtrar por utilizador, recurso...">
+        </div>
+
+        <div id="tabela-container" class="card-tabela">
+            <p class="estado-mensagem">A carregar registos...</p>
+        </div>
+    </main>
+
+    <script type="module" src="./pages/auditoria.js"></script>
+</body>
+</html>
