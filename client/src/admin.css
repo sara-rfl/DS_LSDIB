@@ -1,0 +1,225 @@
+.background {
+    background: #d1deff;
+    min-height: 100vh;
+    font-family: Gill Sans,Gill Sans MT,Calibri,sans-serif;
+    color: #1a1a2e;
+}
+
+
+/* STATS */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.stat-card {
+    background: #a3d0ff;
+    border-radius: 14px;
+    padding: 24px 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.stat-valor {
+    font-size: 50px;
+    font-weight: 700;
+    color: #1a73e8;
+}
+
+.stat-label {
+    font-size: 20px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+/* TABS */
+.tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #240105;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 10px 20px;
+    font-size: 20px;
+    font-weight: 600;
+    font-family: inherit;
+    color: #282f3c;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: color 0.2s, border-color 0.2s;
+    width: auto;
+    box-shadow: none;
+    transform: none;
+}
+
+.tab-btn:hover {
+    color: #1a73e8;
+    background: none;
+    box-shadow: none;
+    transform: none;
+    filter: none;
+}
+
+.tab-btn.active {
+    color: #1a73e8;
+    border-bottom-color: #1a73e8;
+}
+
+/* BOTÃO AUDITORIA */
+.btn-auditoria {
+    background: none;
+    border: 1.5px solid #1a73e8;
+    color: #1a73e8;
+    padding: 7px 18px;
+    border-radius: 8px;
+    font-size: 17px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-auditoria:hover {
+    background: #1a73e8;
+    color: #ffffff;
+}
+
+/* BOTÃO ALTERAR PERFIL (inline na tabela) */
+.btn-alterar-perfil {
+    background: none;
+    border: 1.5px solid #e5e7eb;
+    color: #5088f7;
+    padding: 5px 14px;
+    border-radius: 7px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: auto;
+}
+
+.btn-alterar-perfil:hover {
+    border-color: #1a73e8;
+    color: #1a73e8;
+    background: #eff6ff;
+   
+}
+
+/* MODAL PERFIL */
+.perfil-select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 15px;
+    font-family: inherit;
+    background: #f9fafb;
+    outline: none;
+    cursor: pointer;
+}
+
+.perfil-select:focus {
+    border-color: #1a73e8;
+    box-shadow: 0 0 0 3px rgba(26,115,232,0.12);
+}
+
+.btn-guardar {
+    width: 100%;
+    background: linear-gradient(135deg, #1a73e8, #1565c0);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: filter 0.2s, transform 0.15s;
+    box-shadow: 0 4px 14px rgba(26,115,232,0.35);
+}
+
+.btn-guardar:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+}
+
+/* CONFIGS */
+.config-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid #f3f4f6;
+    gap: 16px;
+}
+
+.config-row:last-child {
+    border-bottom: none;
+}
+
+.config-info {
+    flex: 1;
+}
+
+.config-chave {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a2e;
+}
+
+.config-descricao {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-top: 2px;
+}
+
+.config-input {
+    width: 100px;
+    padding: 8px 12px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.config-input:focus {
+    border-color: #1a73e8;
+    box-shadow: 0 0 0 3px rgba(26,115,232,0.12);
+}
+
+.btn-config-guardar {
+    background: #eff6ff;
+    border: 1.5px solid #1a73e8;
+    color: #1a73e8;
+    padding: 7px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: auto;
+}
+
+.btn-config-guardar:hover {
+    background: #1a73e8;
+    color: white;
+    transform: none;
+    box-shadow: none;
+    filter: none;
+}
