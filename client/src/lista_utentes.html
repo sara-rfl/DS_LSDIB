@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema SauDInoB - Pacientes</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <nav class="top-nav">
+        <h2 class="logo">Sistema SauDInoB</h2>
+        <button id="btn-logout" class="btn-move-out">log out</button>
+    </nav>
+
+    <main class="container-lista">
+        <div class="header-lista" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h1>Lista de Utentes</h1>
+            <input type="text" id="pesquisa-utente" class="search-input" placeholder="Pesquisar por nome ou email...">
+        </div>
+        
+        <div id="tabela-container" class="card-tabela">
+            <p>A carregar dados clínicos...</p>
+        </div>
+    </main>
+    <script type="module" src="./pages/lista_utentes.js"></script>
+</body>
+</html>

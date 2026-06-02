@@ -15,12 +15,11 @@ const mensagemErro = document.getElementById('mensagemErro') as HTMLParagraphEle
 loginForm?.addEventListener('submit', async (event: Event) => {
     event.preventDefault(); 
 
-    // Interrompe a execução se os elementos não existirem no HTML
     if (!emailInput || !passwordInput || !mensagemErro) return;
 
     const email = emailInput.value;
     const password = passwordInput.value;
-
+    
     try {
         const response = await fetch('http://localhost:3000/auth/login', {
             method: 'POST',
@@ -40,16 +39,19 @@ loginForm?.addEventListener('submit', async (event: Event) => {
             localStorage.setItem('nome', data.nome);
             localStorage.setItem('userId', data.id.toString());
 
-            // Redireciona com base no perfil autenticado
-            switch (data.perfil) {
-                case 'UTENTE':
-                    window.location.href = '/dashboard_utente.html';
+            switch (data.perfil.toLowerCase()) {
+                case 'utente':
+                    window.location.href = 'dashboard_utente.html';
                     break;
-                case 'MEDICO':
-                    window.location.href = '/lista_utentes.html';
+                case 'medico':
+                    window.location.href = 'lista_utentes.html';
                     break;
-                case 'ADMINISTRADOR':
-                    window.location.href = '/painel_admin.html';
+                case 'administrador':
+                case 'admin':
+                    window.location.href = 'painel_admin.html';
+                    break;
+                default:
+                    console.error('Erro: Perfil não reconhecido pelo sistema ->', data.perfil);
                     break;
             }
         } else {
