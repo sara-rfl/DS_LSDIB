@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { processarAvaliacao } from '../services/caratService';
 import { guardarAvaliacao, getHistorico, getAvaliacaoById } from '../services/caratRepository';
 import { gerarAlertas } from '../services/alertaEngine';
-import { guardarAlerta, getMedicoDoUtente, temMedicacaoAtiva } from '../services/alertaRepository';
+import { guardarAlerta, getMedicoDoUtente, temMedicacaoAtiva, fecharPedidosCaratPendentes } from '../services/alertaRepository';
 import { obterUtente } from '../services/patientService';
 
 export function submeter(req: Request, res: Response, next: NextFunction) {
@@ -24,6 +24,7 @@ export function submeter(req: Request, res: Response, next: NextFunction) {
         };
         const alertas = gerarAlertas(contexto, utenteId, medicoId, Number(avaliacaoCaratId));
         alertas.forEach(alerta => guardarAlerta(alerta));
+        fecharPedidosCaratPendentes(utenteId);
         res.status(201).json({ ...resultado, alertasGerados: alertas });
     } catch (erro) { next(erro); }
 }

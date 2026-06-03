@@ -83,7 +83,9 @@ function desenharTabela(lista) {
     container.innerHTML = htmlTabela;
 
     container.querySelectorAll('.btn-ver').forEach((btn, i) => {
-        btn.addEventListener('click', () => abrirModal(lista[i].id));
+        btn.addEventListener('click', () => {
+            window.location.href = `utente_detalhe.html?id=${lista[i].utenteId}`;
+        });
     });
 }
 // ---------------------------------------------------------

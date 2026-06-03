@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { getMedicoIdPorUtilizadorId } from '../services/doctorService';
 import { obterUtente } from '../services/patientService';
-import { guardarMedicacao, listarMedicacao } from '../services/medicacaoRepository';
+import { guardarMedicacao, listarMedicacao, atualizarMedicacao, eliminarMedicacao } from '../services/medicacaoRepository';
 
 export function submeter(req: Request, res: Response, next: NextFunction) {
     try {
@@ -22,5 +22,22 @@ export function listar(req: Request, res: Response, next: NextFunction) {
         obterUtente(utenteId);
         const medicacao = listarMedicacao(utenteId);
         res.json(medicacao);
+    } catch (erro) { next(erro); }
+}
+
+export function atualizar(req: Request, res: Response, next: NextFunction) {
+    try {
+        const medicacaoId = Number(req.params.medicacaoId);
+        const { nome, dose, dataInicio, dataFim } = req.body;
+        atualizarMedicacao(medicacaoId, nome, dose, dataInicio, dataFim ?? null);
+        res.json({ message: 'Medicação atualizada com sucesso' });
+    } catch (erro) { next(erro); }
+}
+
+export function eliminar(req: Request, res: Response, next: NextFunction) {
+    try {
+        const medicacaoId = Number(req.params.medicacaoId);
+        eliminarMedicacao(medicacaoId);
+        res.status(204).send();
     } catch (erro) { next(erro); }
 }

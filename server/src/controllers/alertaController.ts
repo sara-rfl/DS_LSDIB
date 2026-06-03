@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { listarAlertas, getAlertaPorId, atualizarEstadoAlerta, adicionarAcaoAlerta } from '../services/alertaRepository';
+import { listarAlertas, getAlertaPorId, atualizarEstadoAlerta, adicionarAcaoAlerta, guardarAlerta } from '../services/alertaRepository';
 import { getMedicoIdPorUtilizadorId } from '../services/doctorService'
 import { obterUtente } from '../services/patientService';
 
@@ -81,5 +81,33 @@ export function listarPorMedico(req: Request, res: Response, next: NextFunction)
         const medicoId = Number(req.params.id);
         const alertas = listarAlertas({ medicoId });
         res.json(alertas);
+    } catch (erro) { next(erro); }
+}
+
+export function criarPedidoCarat(req: Request, res: Response, next: NextFunction) {
+    try {
+        const utenteId = Number(req.params.id);
+        const utilizadorId = (req as any).utilizador.id;
+        const medicoId = getMedicoIdPorUtilizadorId(utilizadorId);
+
+        obterUtente(utenteId);
+
+        guardarAlerta({
+            utenteId,
+            medicoId,
+            avaliacaoCaratId: null,
+            tipo: 'PEDIDO_CARAT',
+            prioridade: 2,
+            motivo: 'O seu médico solicita o preenchimento do questionário CARAT.'
+        });
+        res.status(201).json({ message: 'Pedido de avaliação CARAT criado.' });
+    } catch (erro) { next(erro); }
+}
+
+export function verificarPedidoCarat(req: Request, res: Response, next: NextFunction) {
+    try {
+        const utenteId = Number(req.params.id);
+        const pendentes = listarAlertas({ utenteId, tipo: 'PEDIDO_CARAT', estado: 'Novo' });
+        res.json({ temPedido: pendentes.length > 0 });
     } catch (erro) { next(erro); }
 }

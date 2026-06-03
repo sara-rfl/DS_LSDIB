@@ -1,9 +1,9 @@
-export type TipoAlerta = 'DETERIORACAO_CLINICA' | 'CONTROLO_INSUFICIENTE' | 'REVISAO_TERAPEUTICA';
+export type TipoAlerta = 'DETERIORACAO_CLINICA' | 'CONTROLO_INSUFICIENTE' | 'REVISAO_TERAPEUTICA' | 'PEDIDO_CARAT';
 
 export interface AlertaCandidato {
   readonly utenteId: number;
   medicoId: number | null;
-  avaliacaoCaratId: number;
+  avaliacaoCaratId: number | null;
   tipo: TipoAlerta;
   prioridade: 1| 2 | 3;
   motivo: string;

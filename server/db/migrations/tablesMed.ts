@@ -66,6 +66,17 @@ db.exec(`
     FOREIGN KEY (avaliacaoCaratId) REFERENCES avaliacaoCarat(id) ON DELETE SET NULL
     );
 
+    CREATE TABLE IF NOT EXISTS notaClinica (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    utenteId INTEGER,
+    medicoId INTEGER,
+    titulo VARCHAR(255),
+    conteudo TEXT NOT NULL,
+    criadoEm DATETIME,
+    FOREIGN KEY (utenteId) REFERENCES utente(id) ON DELETE SET NULL,
+    FOREIGN KEY (medicoId) REFERENCES medico(id) ON DELETE SET NULL
+    );
+
 `);
 
 console.log('Tabelas de avaliação, sintomas, medicação e exames criadas com sucesso.');

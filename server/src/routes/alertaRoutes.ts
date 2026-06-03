@@ -13,5 +13,7 @@ router.get('/api/alertas/:id', autenticar, autorizar('medico'), alertaController
 router.get('/doctors/:id/alerts', autenticar, autorizar('medico', 'admin'), alertaController.listarPorMedico);
 router.patch('/api/alertas/:id', autenticar, autorizar('medico'), validateBody(atualizarEstadoAlertaSchema), alertaController.atualizarEstado);
 router.post('/api/alertas/:id/acoes', autenticar, autorizar('medico'), validateBody(adicionarAcaoAlertaSchema), alertaController.adicionarAcao);
+router.post('/patients/:id/pedido-carat', autenticar, autorizar('medico'), alertaController.criarPedidoCarat);
+router.get('/patients/:id/pedido-carat', autenticar, autorizar('utente'), alertaController.verificarPedidoCarat);
 
 export default router;  

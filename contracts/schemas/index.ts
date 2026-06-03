@@ -75,3 +75,13 @@ export const adicionarAcaoAlertaSchema = {
     },
     additionalProperties: false
 } as const;
+
+export const criarNotaSchema = {
+    type: 'object',
+    required: ['conteudo'],
+    properties: {
+        titulo: { type: 'string', minLength: 1, maxLength: 255 },
+        conteudo: { type: 'string', minLength: 1 }
+    },
+    additionalProperties: false
+} as const;

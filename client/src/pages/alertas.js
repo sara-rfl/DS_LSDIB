@@ -63,7 +63,7 @@ function desenharTabela(lista) {
             <thead>
                 <tr>
                     <th>Data</th>
-                    <th>Utente ID</th>
+                    <th>Utente</th>
                     <th>Tipo</th>
                     <th>Motivo</th>
                     <th>Prioridade</th>
@@ -81,7 +81,7 @@ function desenharTabela(lista) {
         html += `
             <tr>
                 <td>${data}</td>
-                <td>${alerta.utenteId}</td>
+                <td>${alerta.utenteNome || '—'}</td>
                 <td>${alerta.tipo || '—'}</td>
                 <td style="max-width:280px; font-size:13px;">${alerta.motivo || '—'}</td>
                 <td>

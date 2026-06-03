@@ -25,6 +25,13 @@ export function listarMedicacao(utenteId: number) {
     `).all(utenteId);
 }
 
+export function atualizarMedicacao(medicacaoId: number, nome: string, dose: string, dataInicio: string, dataFim: string | null) {
+    db.prepare(`
+        UPDATE medicacao SET nome = ?, dose = ?, dataInicio = ?, dataFim = ?
+        WHERE id = ?
+    `).run(nome, dose, dataInicio, dataFim, medicacaoId);
+}
+
 export function eliminarMedicacao(medicacaoId: number) {
     db.prepare(`
         DELETE FROM medicacao

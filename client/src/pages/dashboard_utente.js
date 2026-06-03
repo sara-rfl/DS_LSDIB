@@ -335,3 +335,26 @@ function mostrarResultadoCarat(resultado) {
     }
     divResultado.scrollIntoView({ behavior: 'smooth' });
 }
+
+// ── PEDIDO CARAT ──────────────────────────────────────────
+async function verificarPedidoCarat() {
+    if (!utenteId) return;
+    try {
+        const r = await fetch(`http://localhost:3000/patients/${utenteId}/pedido-carat`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!r.ok) return;
+        const dados = await r.json();
+        if (dados.temPedido) {
+            const banner = document.getElementById('banner-pedido-carat');
+            if (banner) {
+                banner.style.display = 'flex';
+                document.getElementById('btn-ir-carat-banner').addEventListener('click', () => {
+                    window.location.href = `carat.html?id=${utenteId}`;
+                });
+            }
+        }
+    } catch { /* silencioso — não bloqueia o dashboard */ }
+}
+
+verificarPedidoCarat();

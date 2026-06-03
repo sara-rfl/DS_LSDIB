@@ -9,5 +9,7 @@ const router = Router();
 
 router.get('/patients/:id/medicacao', autenticar, autorizar('medico', 'utente'), medicacaoController.listar);
 router.post('/patients/:id/medicacao', autenticar, autorizar('medico'), validateBody(submeterMedicacaoSchema), medicacaoController.submeter);
+router.put('/medicacao/:medicacaoId', autenticar, autorizar('medico'), validateBody(submeterMedicacaoSchema), medicacaoController.atualizar);
+router.delete('/medicacao/:medicacaoId', autenticar, autorizar('medico'), medicacaoController.eliminar);
 
 export default router;  

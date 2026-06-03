@@ -17,6 +17,7 @@ import sintomaRoutes from './routes/sintomaRoutes';
 import medicacaoRoutes from './routes/medicacaoRoutes';
 import exameRoutes from './routes/exameRoutes';
 import fhirRoutes from './routes/fhirRoutes';
+import notaRoutes from './routes/notaRoutes';
 
 const app = express();
 app.use(cors());
@@ -34,6 +35,7 @@ app.use(caratRoutes);
 app.use(alertaRoutes);
 app.use(sintomaRoutes);
 app.use(medicacaoRoutes);
+app.use(notaRoutes);
 app.use(exameRoutes);
 app.use(errorHandler);
 app.use(fhirRoutes);

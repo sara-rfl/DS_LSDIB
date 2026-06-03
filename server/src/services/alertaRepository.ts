@@ -43,25 +43,43 @@ export function temMedicacaoAtiva(utenteId: number): boolean {
 }
 
 
-export function listarAlertas(filtros: { utenteId?: number; medicoId?: number; estado?: string }) {
-    let query = `SELECT * FROM alerta WHERE 1=1`;
+export function listarAlertas(filtros: { utenteId?: number; medicoId?: number; estado?: string; tipo?: string }) {
+    let query = `
+        SELECT a.*, u.nome AS utenteNome
+        FROM alerta a
+        JOIN utente ut ON ut.id = a.utenteId
+        JOIN utilizador u ON u.id = ut.utilizadorId
+        WHERE 1=1
+    `;
     const params: any[] = [];
 
     if (filtros.utenteId) {
-        query += ` AND utenteId = ?`;
+        query += ` AND a.utenteId = ?`;
         params.push(filtros.utenteId);
     }
     if (filtros.medicoId) {
-        query += ` AND medicoId = ?`;
+        query += ` AND a.medicoId = ?`;
         params.push(filtros.medicoId);
     }
     if (filtros.estado) {
-        query += ` AND estado = ?`;
+        query += ` AND a.estado = ?`;
         params.push(filtros.estado);
+    }
+    if (filtros.tipo) {
+        query += ` AND a.tipo = ?`;
+        params.push(filtros.tipo);
     }
 
     const stmt = db.prepare(query);
     return stmt.all(...params);
+}
+
+export function fecharPedidosCaratPendentes(utenteId: number) {
+    const agora = new Date().toISOString();
+    db.prepare(`
+        UPDATE alerta SET estado = 'Fechado', atualizadoEm = ?
+        WHERE utenteId = ? AND tipo = 'PEDIDO_CARAT' AND estado = 'Novo'
+    `).run(agora, utenteId);
 }
 
 export function atualizarEstadoAlerta(alertaId: number, novoEstado: 'Novo' | 'Visto' | 'Em_Seguimento' | 'Fechado') {
