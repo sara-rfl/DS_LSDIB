@@ -14,6 +14,7 @@ import alertaRoutes from './routes/alertaRoutes';
 import sintomaRoutes from './routes/sintomaRoutes';
 import medicacaoRoutes from './routes/medicacaoRoutes';
 import exameRoutes from './routes/exameRoutes';
+import fhirRoutes from './routes/fhirRoutes';
 
 const app = express();
 app.use(cors());
@@ -31,6 +32,7 @@ app.use(sintomaRoutes);
 app.use(medicacaoRoutes);
 app.use(exameRoutes);
 app.use(errorHandler);
+app.use(fhirRoutes);
 
 if (process.env.NODE_ENV !== 'test') {
     const PORT = process.env.PORT || 3000;

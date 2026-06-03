@@ -75,3 +75,11 @@ export function adicionarAcao(req: Request, res: Response, next: NextFunction) {
     }
     catch (erro) { next(erro); }
 }
+
+export function listarPorMedico(req: Request, res: Response, next: NextFunction) {
+    try {
+        const medicoId = Number(req.params.id);
+        const alertas = listarAlertas({ medicoId });
+        res.json(alertas);
+    } catch (erro) { next(erro); }
+}

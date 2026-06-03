@@ -5,7 +5,7 @@ import { autorizar } from '../middleware/authorizationMiddleware';
 
 const router = Router();
 
-router.get('/config', autenticar, autorizar('admin', 'medico'), configController.obter);
+router.get('/config', autenticar, autorizar('admin'), configController.obter);
 router.put('/config', autenticar, autorizar('admin'), configController.atualizar);
 
 export default router;

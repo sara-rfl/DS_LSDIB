@@ -5,9 +5,9 @@ import { autorizar } from '../middleware/authorizationMiddleware';
 
 const router = Router();
 
-router.get('/doctors', autenticar, autorizar('medico', 'admin'), doctorController.listar);
+router.get('/doctors', autenticar, autorizar('admin'), doctorController.listar);
 router.post('/doctors', autenticar, autorizar('admin'), doctorController.criar);
-router.get('/doctors/:id', autenticar, autorizar('medico', 'admin'), doctorController.obter);
+router.get('/doctors/:id', autenticar, autorizar('admin'), doctorController.obter);
 router.put('/doctors/:id', autenticar, autorizar('admin'), doctorController.atualizar);
 router.delete('/doctors/:id', autenticar, autorizar('admin'), doctorController.eliminar);
 

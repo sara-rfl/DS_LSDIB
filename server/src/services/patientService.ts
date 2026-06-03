@@ -35,12 +35,13 @@ export function criarUtente(dados: any) {
     VALUES (?, ?, ?, 'utente', ?)
   `).run(email, passwordHash, nome, criadoEm);
 
-  db.prepare(`
+  const utente = db.prepare(`
     INSERT INTO utente (utilizadorId, nUtente, dataNascimento, telefone, morada, genero, medicoId)
     VALUES (?, ?, ?, ?, ?, ?, ?)
   `).run(utilizador.lastInsertRowid, nUtente, dataNascimento, telefone, morada, genero, medicoId);
 
-  return obterUtente(utilizador.lastInsertRowid as number);
+  // Usa o id do utente, não do utilizador
+  return obterUtente(utente.lastInsertRowid as number);
 }
 
 export function atualizarUtente(id: number, dados: any) {
@@ -56,5 +57,7 @@ export function atualizarUtente(id: number, dados: any) {
 
 export function eliminarUtente(id: number) {
   obterUtente(id);
-  db.prepare('DELETE FROM utilizador WHERE id = (SELECT utilizadorId FROM utente WHERE id = ?)').run(id);
+  const utente = db.prepare('SELECT utilizadorId FROM utente WHERE id = ?').get(id) as any;
+  db.prepare('DELETE FROM utente WHERE id = ?').run(id);
+  db.prepare('DELETE FROM utilizador WHERE id = ?').run(utente.utilizadorId);
 }

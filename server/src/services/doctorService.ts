@@ -35,12 +35,12 @@ export function criarMedico(dados: any) {
     VALUES (?, ?, ?, 'medico', ?)
   `).run(email, passwordHash, nome, criadoEm);
 
-  db.prepare(`
+  const medico = db.prepare(`
     INSERT INTO medico (utilizadorId, especialidade, telefone, nrOrdem)
     VALUES (?, ?, ?, ?)
   `).run(utilizador.lastInsertRowid, especialidade, telefone, nrOrdem);
 
-  return obterMedico(utilizador.lastInsertRowid as number);
+  return obterMedico(medico.lastInsertRowid as number);
 }
 
 export function atualizarMedico(id: number, dados: any) {
@@ -56,7 +56,9 @@ export function atualizarMedico(id: number, dados: any) {
 
 export function eliminarMedico(id: number) {
   obterMedico(id);
-  db.prepare('DELETE FROM utilizador WHERE id = (SELECT utilizadorId FROM medico WHERE id = ?)').run(id);
+  const medico = db.prepare('SELECT utilizadorId FROM medico WHERE id = ?').get(id) as any;
+  db.prepare('DELETE FROM medico WHERE id = ?').run(id);
+  db.prepare('DELETE FROM utilizador WHERE id = ?').run(medico.utilizadorId);
 }
 
 export function getMedicoIdPorUtilizadorId(utenteId: number): number | null {
