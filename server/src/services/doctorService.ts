@@ -30,17 +30,21 @@ export function criarMedico(dados: any) {
   const passwordHash = bcrypt.hashSync(password, 10);
   const criadoEm = new Date().toISOString();
 
-  const utilizador = db.prepare(`
-    INSERT INTO utilizador (email, passwordHash, nome, perfil, criadoEm)
-    VALUES (?, ?, ?, 'medico', ?)
-  `).run(email, passwordHash, nome, criadoEm);
+  const medicoId = db.transaction(() => {
+    const utilizador = db.prepare(`
+      INSERT INTO utilizador (email, passwordHash, nome, perfil, criadoEm)
+      VALUES (?, ?, ?, 'medico', ?)
+    `).run(email, passwordHash, nome, criadoEm);
 
-  db.prepare(`
-    INSERT INTO medico (utilizadorId, especialidade, telefone, nrOrdem)
-    VALUES (?, ?, ?, ?)
-  `).run(utilizador.lastInsertRowid, especialidade, telefone, nrOrdem);
+    const medico = db.prepare(`
+      INSERT INTO medico (utilizadorId, especialidade, telefone, nrOrdem)
+      VALUES (?, ?, ?, ?)
+    `).run(utilizador.lastInsertRowid, especialidade, telefone, nrOrdem);
 
-  return obterMedico(utilizador.lastInsertRowid as number);
+    return medico.lastInsertRowid;
+  })();
+
+  return obterMedico(medicoId as number);
 }
 
 export function atualizarMedico(id: number, dados: any) {

@@ -41,7 +41,10 @@
         <!-- TABS -->
         <div class="tabs">
             <button class="tab-btn active" data-tab="utilizadores">Utilizadores</button>
-            <button class="tab-btn" data-tab="configs">Configurações do Sistema</button>
+            <button class="tab-btn" data-tab="medicos">Médicos</button>
+            <button class="tab-btn" data-tab="utentes">Utentes</button>
+            <button class="tab-btn" data-tab="simulados">Dados Simulados</button>
+            <button class="tab-btn" data-tab="configs">Configurações</button>
         </div>
 
         <!-- TAB: UTILIZADORES -->
@@ -55,6 +58,55 @@
             </div>
             <div id="tabela-users" class="card-tabela">
                 <p class="estado-mensagem">A carregar utilizadores...</p>
+            </div>
+        </div>
+
+        <!-- TAB: MÉDICOS -->
+        <div id="tab-medicos" class="tab-content" style="display:none;">
+            <div class="header-lista">
+                <div class="header-esquerda">
+                    <h1>Médicos</h1>
+                    <span id="contagem-medicos" class="contagem-badge">—</span>
+                </div>
+                <button id="btn-criar-medico" class="btn-criar">+ Novo Médico</button>
+            </div>
+            <div id="tabela-medicos" class="card-tabela">
+                <p class="estado-mensagem">A carregar médicos...</p>
+            </div>
+        </div>
+
+        <!-- TAB: UTENTES -->
+        <div id="tab-utentes" class="tab-content" style="display:none;">
+            <div class="header-lista">
+                <div class="header-esquerda">
+                    <h1>Utentes</h1>
+                    <span id="contagem-utentes-admin" class="contagem-badge">—</span>
+                </div>
+                <button id="btn-criar-utente" class="btn-criar">+ Novo Utente</button>
+            </div>
+            <div id="tabela-utentes-admin" class="card-tabela">
+                <p class="estado-mensagem">A carregar utentes...</p>
+            </div>
+        </div>
+
+        <!-- TAB: DADOS SIMULADOS -->
+        <div id="tab-simulados" class="tab-content" style="display:none;">
+            <div class="header-lista">
+                <div class="header-esquerda">
+                    <h1>Dados Simulados</h1>
+                </div>
+            </div>
+            <div class="card-tabela">
+                <div class="simulados-painel">
+                    <p class="simulados-desc">
+                        Gere dados de demonstração para testar o sistema. Esta operação cria médicos e utentes de exemplo na base de dados, prontos para uso imediato.
+                    </p>
+                    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                        <button id="btn-gerar-simulados" class="btn-criar">Gerar Dados de Exemplo</button>
+                        <button id="btn-limpar-simulados" class="btn-eliminar" style="padding:9px 20px; font-size:15px;">Limpar Dados de Exemplo</button>
+                    </div>
+                    <div id="simulados-log" class="simulados-log" style="display:none;"></div>
+                </div>
             </div>
         </div>
 
@@ -97,6 +149,119 @@
                     </select>
                 </div>
                 <button id="modal-perfil-guardar" class="btn-guardar">Guardar Alteração</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CRIAR/EDITAR MÉDICO -->
+    <div id="modal-medico" class="modal-overlay" style="display:none;">
+        <div class="modal modal-form-grande">
+            <div class="modal-header">
+                <h2 id="modal-medico-titulo">Novo Médico</h2>
+                <button id="modal-medico-fechar" class="modal-fechar">&times;</button>
+            </div>
+            <div class="modal-body" style="grid-template-columns:1fr; padding-bottom:24px;">
+                <div class="form-grid">
+                    <div class="form-campo" id="campo-medico-nome">
+                        <label class="form-label">Nome</label>
+                        <input type="text" id="medico-nome" class="form-input" placeholder="Nome completo">
+                    </div>
+                    <div class="form-campo" id="campo-medico-email">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="medico-email" class="form-input" placeholder="email@exemplo.pt">
+                    </div>
+                    <div class="form-campo" id="campo-medico-pass">
+                        <label class="form-label">Password</label>
+                        <input type="password" id="medico-password" class="form-input" placeholder="Password inicial">
+                    </div>
+                    <div class="form-campo">
+                        <label class="form-label">Especialidade</label>
+                        <input type="text" id="medico-especialidade" class="form-input" placeholder="Ex: Cardiologia">
+                    </div>
+                    <div class="form-campo">
+                        <label class="form-label">Nr. Ordem</label>
+                        <input type="text" id="medico-nrOrdem" class="form-input" placeholder="Ex: C12345">
+                    </div>
+                    <div class="form-campo">
+                        <label class="form-label">Telefone</label>
+                        <input type="text" id="medico-telefone" class="form-input" placeholder="9XXXXXXXX">
+                    </div>
+                </div>
+                <button id="modal-medico-guardar" class="btn-guardar" style="margin-top:8px;">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CRIAR/EDITAR UTENTE -->
+    <div id="modal-utente" class="modal-overlay" style="display:none;">
+        <div class="modal modal-form-grande">
+            <div class="modal-header">
+                <h2 id="modal-utente-titulo">Novo Utente</h2>
+                <button id="modal-utente-fechar" class="modal-fechar">&times;</button>
+            </div>
+            <div class="modal-body" style="grid-template-columns:1fr; padding-bottom:24px;">
+                <div class="form-grid" id="form-utente-grid">
+                    <div class="form-campo" id="campo-utente-nome">
+                        <label class="form-label">Nome</label>
+                        <input type="text" id="utente-nome" class="form-input" placeholder="Nome completo">
+                    </div>
+                    <div class="form-campo" id="campo-utente-email">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="utente-email" class="form-input" placeholder="email@exemplo.pt">
+                    </div>
+                    <div class="form-campo" id="campo-utente-pass">
+                        <label class="form-label">Password</label>
+                        <input type="password" id="utente-password" class="form-input" placeholder="Password inicial">
+                    </div>
+                    <div class="form-campo" id="campo-utente-nUtente">
+                        <label class="form-label">N.º Utente</label>
+                        <input type="text" id="utente-nUtente" class="form-input" placeholder="123456789">
+                    </div>
+                    <div class="form-campo" id="campo-utente-dataNasc">
+                        <label class="form-label">Data de Nascimento</label>
+                        <input type="date" id="utente-dataNascimento" class="form-input">
+                    </div>
+                    <div class="form-campo">
+                        <label class="form-label">Telefone</label>
+                        <input type="text" id="utente-telefone" class="form-input" placeholder="9XXXXXXXX">
+                    </div>
+                    <div class="form-campo">
+                        <label class="form-label">Morada</label>
+                        <input type="text" id="utente-morada" class="form-input" placeholder="Rua, cidade">
+                    </div>
+                    <div class="form-campo">
+                        <label class="form-label">Género</label>
+                        <select id="utente-genero" class="form-input perfil-select">
+                            <option value="">Selecionar</option>
+                            <option value="masculino">Masculino</option>
+                            <option value="feminino">Feminino</option>
+                        </select>
+                    </div>
+                    <div class="form-campo">
+                        <label class="form-label">Médico Responsável</label>
+                        <select id="utente-medicoId" class="form-input perfil-select">
+                            <option value="">Sem médico atribuído</option>
+                        </select>
+                    </div>
+                </div>
+                <button id="modal-utente-guardar" class="btn-guardar" style="margin-top:8px;">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CONFIRMAÇÃO ELIMINAR -->
+    <div id="modal-eliminar" class="modal-overlay" style="display:none;">
+        <div class="modal" style="max-width:400px;">
+            <div class="modal-header">
+                <h2 style="color:#dc2626;">Confirmar Eliminação</h2>
+                <button id="modal-eliminar-fechar" class="modal-fechar">&times;</button>
+            </div>
+            <div class="modal-body" style="grid-template-columns:1fr;">
+                <p id="modal-eliminar-msg" style="color:#374151; font-size:15px; line-height:1.5;"></p>
+                <div style="display:flex; gap:12px; margin-top:4px;">
+                    <button id="modal-eliminar-cancelar" class="btn-alterar-perfil" style="flex:1;">Cancelar</button>
+                    <button id="modal-eliminar-confirmar" class="btn-eliminar" style="flex:1;">Eliminar</button>
+                </div>
             </div>
         </div>
     </div>

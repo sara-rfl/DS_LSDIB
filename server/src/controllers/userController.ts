@@ -7,6 +7,13 @@ export function listar(req: Request, res: Response, next: NextFunction) {
   } catch (erro) { next(erro); }
 }
 
+export function eliminar(req: Request, res: Response, next: NextFunction) {
+  try {
+    userService.eliminar(Number(req.params.id));
+    res.status(204).send();
+  } catch (erro) { next(erro); }
+}
+
 export function alterarPerfil(req: Request, res: Response, next: NextFunction) {
   try {
     const { perfil } = req.body;

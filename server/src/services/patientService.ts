@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 
 export function listarUtentes() {
   return db.prepare(`
-    SELECT u.id, u.nome, u.email, u.perfil, ut.nUtente, ut.dataNascimento, ut.telefone, ut.morada, ut.genero, ut.medicoId
+    SELECT u.id, u.nome, u.email, u.perfil, ut.id as utenteId, ut.nUtente, ut.dataNascimento, ut.telefone, ut.morada, ut.genero, ut.medicoId
     FROM utilizador u
     JOIN utente ut ON ut.utilizadorId = u.id
   `).all();
@@ -35,17 +35,21 @@ export function criarUtente(dados: any) {
   const passwordHash = bcrypt.hashSync(password, 10);
   const criadoEm = new Date().toISOString();
 
-  const utilizador = db.prepare(`
-    INSERT INTO utilizador (email, passwordHash, nome, perfil, criadoEm)
-    VALUES (?, ?, ?, 'utente', ?)
-  `).run(email, passwordHash, nome, criadoEm);
+  const utenteId = db.transaction(() => {
+    const utilizador = db.prepare(`
+      INSERT INTO utilizador (email, passwordHash, nome, perfil, criadoEm)
+      VALUES (?, ?, ?, 'utente', ?)
+    `).run(email, passwordHash, nome, criadoEm);
 
-  db.prepare(`
-    INSERT INTO utente (utilizadorId, nUtente, dataNascimento, telefone, morada, genero, medicoId)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-  `).run(utilizador.lastInsertRowid, nUtente, dataNascimento, telefone, morada, genero, medicoId);
+    const utente = db.prepare(`
+      INSERT INTO utente (utilizadorId, nUtente, dataNascimento, telefone, morada, genero, medicoId)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `).run(utilizador.lastInsertRowid, nUtente, dataNascimento, telefone, morada, genero, medicoId);
 
-  return obterUtente(utilizador.lastInsertRowid as number);
+    return utente.lastInsertRowid;
+  })();
+
+  return obterUtente(utenteId as number);
 }
 
 export function atualizarUtente(id: number, dados: any) {

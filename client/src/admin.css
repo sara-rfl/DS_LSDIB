@@ -155,6 +155,134 @@
     transform: translateY(-1px);
 }
 
+/* BOTÃO CRIAR */
+.btn-criar {
+    background: linear-gradient(135deg, #1a73e8, #1565c0);
+    color: white;
+    border: none;
+    padding: 9px 20px;
+    border-radius: 9px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: filter 0.2s, transform 0.15s;
+    box-shadow: 0 3px 10px rgba(26,115,232,0.3);
+    width: auto;
+}
+
+.btn-criar:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+}
+
+.btn-criar:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* BOTÃO ELIMINAR */
+.btn-eliminar {
+    background: none;
+    border: 1.5px solid #fca5a5;
+    color: #dc2626;
+    padding: 5px 14px;
+    border-radius: 7px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: auto;
+}
+
+.btn-eliminar:hover {
+    background: #fee2e2;
+    border-color: #dc2626;
+    transform: none;
+    box-shadow: none;
+    filter: none;
+}
+
+/* FORM GRID */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.form-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6b7280;
+}
+
+.form-input {
+    padding: 9px 13px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 9px;
+    font-size: 14px;
+    font-family: inherit;
+    background: #f9fafb;
+    outline: none;
+    transition: border-color 0.2s;
+    color: #1a1a2e;
+}
+
+.form-input:focus {
+    border-color: #1a73e8;
+    box-shadow: 0 0 0 3px rgba(26,115,232,0.12);
+    background: #fff;
+}
+
+/* MODAL FORM GRANDE */
+.modal-form-grande {
+    max-width: 620px;
+    width: 95vw;
+}
+
+/* DADOS SIMULADOS */
+.simulados-painel {
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.simulados-desc {
+    color: #6b7280;
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 580px;
+}
+
+.simulados-log {
+    width: 100%;
+    background: #f1f5f9;
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-size: 13px;
+    font-family: 'Courier New', monospace;
+    color: #374151;
+    max-height: 280px;
+    overflow-y: auto;
+    line-height: 1.9;
+    border: 1px solid #e2e8f0;
+}
+
+.log-ok  { color: #16a34a; }
+.log-err { color: #dc2626; }
+
 /* CONFIGS */
 .config-row {
     display: flex;

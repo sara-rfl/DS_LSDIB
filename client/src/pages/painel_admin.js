@@ -152,7 +152,478 @@ document.getElementById('modal-perfil-guardar')?.addEventListener('click', async
     }
 });
 
+// ── MÉDICOS ───────────────────────────────────────────────
+let todosMedicos = [];
+
+async function carregarMedicos() {
+    try {
+        todosMedicos = await api('/doctors');
+        const badge = document.getElementById('contagem-medicos');
+        if (badge) badge.textContent = `${todosMedicos.length} médicos`;
+        desenharMedicos(todosMedicos);
+    } catch {
+        document.getElementById('tabela-medicos').innerHTML = '<p class="error-message">Erro ao carregar médicos.</p>';
+    }
+}
+
+function desenharMedicos(lista) {
+    const container = document.getElementById('tabela-medicos');
+    if (!container) return;
+
+    if (lista.length === 0) {
+        container.innerHTML = '<p class="estado-mensagem">Nenhum médico encontrado.</p>';
+        return;
+    }
+
+    let html = `
+        <table class="tabela-utentes">
+            <thead><tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Especialidade</th>
+                <th>Nr. Ordem</th>
+                <th>Telefone</th>
+                <th></th>
+            </tr></thead>
+            <tbody>
+    `;
+
+    lista.forEach(m => {
+        html += `
+            <tr>
+                <td><div class="td-nome"><span class="avatar" style="background:linear-gradient(135deg,#1a73e8,#1565c0);">${m.nome.split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase()}</span>${m.nome}</div></td>
+                <td>${m.email}</td>
+                <td>${m.especialidade || '—'}</td>
+                <td>${m.nrOrdem || '—'}</td>
+                <td>${m.telefone || '—'}</td>
+                <td>
+                    <div style="display:flex; gap:8px;">
+                        <button class="btn-alterar-perfil btn-editar-medico" data-id="${m.medicoId}">Editar</button>
+                        <button class="btn-eliminar btn-del-medico" data-id="${m.medicoId}" data-nome="${m.nome}">Eliminar</button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    });
+
+    html += '</tbody></table>';
+    container.innerHTML = html;
+
+    container.querySelectorAll('.btn-editar-medico').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const m = todosMedicos.find(x => x.medicoId === Number(btn.dataset.id));
+            if (m) abrirModalMedico(m);
+        });
+    });
+
+    container.querySelectorAll('.btn-del-medico').forEach(btn => {
+        btn.addEventListener('click', () => {
+            abrirModalEliminar('medico', btn.dataset.id, btn.dataset.nome);
+        });
+    });
+}
+
+// ── MODAL MÉDICO ──────────────────────────────────────────
+let medicoEmEdicao = null;
+
+function abrirModalMedico(medico = null) {
+    medicoEmEdicao = medico;
+    const titulo = document.getElementById('modal-medico-titulo');
+
+    if (medico) {
+        titulo.textContent = 'Editar Médico';
+        document.getElementById('medico-nome').value         = medico.nome;
+        document.getElementById('medico-email').value        = medico.email;
+        document.getElementById('medico-password').value     = '';
+        document.getElementById('medico-especialidade').value = medico.especialidade || '';
+        document.getElementById('medico-nrOrdem').value      = medico.nrOrdem || '';
+        document.getElementById('medico-telefone').value     = medico.telefone || '';
+        document.getElementById('campo-medico-nome').style.display  = 'none';
+        document.getElementById('campo-medico-email').style.display = 'none';
+        document.getElementById('campo-medico-pass').style.display  = 'none';
+    } else {
+        titulo.textContent = 'Novo Médico';
+        document.getElementById('medico-nome').value         = '';
+        document.getElementById('medico-email').value        = '';
+        document.getElementById('medico-password').value     = '';
+        document.getElementById('medico-especialidade').value = '';
+        document.getElementById('medico-nrOrdem').value      = '';
+        document.getElementById('medico-telefone').value     = '';
+        document.getElementById('campo-medico-nome').style.display  = '';
+        document.getElementById('campo-medico-email').style.display = '';
+        document.getElementById('campo-medico-pass').style.display  = '';
+    }
+
+    document.getElementById('modal-medico').style.display = 'flex';
+}
+
+document.getElementById('modal-medico-fechar')?.addEventListener('click', () => {
+    document.getElementById('modal-medico').style.display = 'none';
+});
+
+document.getElementById('modal-medico')?.addEventListener('click', e => {
+    if (e.target === document.getElementById('modal-medico'))
+        document.getElementById('modal-medico').style.display = 'none';
+});
+
+document.getElementById('btn-criar-medico')?.addEventListener('click', () => abrirModalMedico(null));
+
+document.getElementById('modal-medico-guardar')?.addEventListener('click', async () => {
+    const btn = document.getElementById('modal-medico-guardar');
+    btn.disabled = true;
+
+    try {
+        if (medicoEmEdicao) {
+            await api(`/doctors/${medicoEmEdicao.medicoId}`, {
+                method: 'PUT',
+                body: JSON.stringify({
+                    especialidade: document.getElementById('medico-especialidade').value,
+                    nrOrdem:      document.getElementById('medico-nrOrdem').value,
+                    telefone:     document.getElementById('medico-telefone').value,
+                })
+            });
+        } else {
+            await api('/doctors', {
+                method: 'POST',
+                body: JSON.stringify({
+                    nome:          document.getElementById('medico-nome').value,
+                    email:         document.getElementById('medico-email').value,
+                    password:      document.getElementById('medico-password').value,
+                    especialidade: document.getElementById('medico-especialidade').value,
+                    nrOrdem:       document.getElementById('medico-nrOrdem').value,
+                    telefone:      document.getElementById('medico-telefone').value,
+                })
+            });
+        }
+        document.getElementById('modal-medico').style.display = 'none';
+        await carregarMedicos();
+        await carregarUsers();
+    } catch (err) {
+        alert('Erro ao guardar médico: ' + err.message);
+    } finally {
+        btn.disabled = false;
+    }
+});
+
+// ── UTENTES ADMIN ─────────────────────────────────────────
+let todosUtentesAdmin = [];
+
+async function carregarUtentesAdmin() {
+    try {
+        todosUtentesAdmin = await api('/patients');
+        const badge = document.getElementById('contagem-utentes-admin');
+        if (badge) badge.textContent = `${todosUtentesAdmin.length} utentes`;
+        desenharUtentesAdmin(todosUtentesAdmin);
+    } catch {
+        document.getElementById('tabela-utentes-admin').innerHTML = '<p class="error-message">Erro ao carregar utentes.</p>';
+    }
+}
+
+function desenharUtentesAdmin(lista) {
+    const container = document.getElementById('tabela-utentes-admin');
+    if (!container) return;
+
+    if (lista.length === 0) {
+        container.innerHTML = '<p class="estado-mensagem">Nenhum utente encontrado.</p>';
+        return;
+    }
+
+    let html = `
+        <table class="tabela-utentes">
+            <thead><tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>N.º Utente</th>
+                <th>Data Nasc.</th>
+                <th>Telefone</th>
+                <th></th>
+            </tr></thead>
+            <tbody>
+    `;
+
+    lista.forEach(u => {
+        const dataNasc = u.dataNascimento ? new Date(u.dataNascimento).toLocaleDateString('pt-PT') : '—';
+        html += `
+            <tr>
+                <td><div class="td-nome"><span class="avatar" style="background:linear-gradient(135deg,#16a34a,#15803d);">${u.nome.split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase()}</span>${u.nome}</div></td>
+                <td>${u.email}</td>
+                <td>${u.nUtente || '—'}</td>
+                <td style="color:#9ca3af; font-size:13px;">${dataNasc}</td>
+                <td>${u.telefone || '—'}</td>
+                <td>
+                    <div style="display:flex; gap:8px;">
+                        <button class="btn-alterar-perfil btn-editar-utente" data-id="${u.utenteId}">Editar</button>
+                        <button class="btn-eliminar btn-del-utente" data-id="${u.utenteId}" data-nome="${u.nome}">Eliminar</button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    });
+
+    html += '</tbody></table>';
+    container.innerHTML = html;
+
+    container.querySelectorAll('.btn-editar-utente').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const u = todosUtentesAdmin.find(x => x.utenteId === Number(btn.dataset.id));
+            if (u) abrirModalUtente(u);
+        });
+    });
+
+    container.querySelectorAll('.btn-del-utente').forEach(btn => {
+        btn.addEventListener('click', () => {
+            abrirModalEliminar('utente', btn.dataset.id, btn.dataset.nome);
+        });
+    });
+}
+
+// ── MODAL UTENTE ──────────────────────────────────────────
+let utenteEmEdicao = null;
+
+async function abrirModalUtente(utente = null) {
+    utenteEmEdicao = utente;
+
+    // Popular select de médicos
+    const selectMedico = document.getElementById('utente-medicoId');
+    selectMedico.innerHTML = '<option value="">Sem médico atribuído</option>';
+    if (todosMedicos.length === 0) await carregarMedicos();
+    todosMedicos.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m.medicoId;
+        opt.textContent = `${m.nome} (${m.especialidade || 'sem especialidade'})`;
+        selectMedico.appendChild(opt);
+    });
+
+    if (utente) {
+        document.getElementById('modal-utente-titulo').textContent = 'Editar Utente';
+        document.getElementById('utente-telefone').value        = utente.telefone || '';
+        document.getElementById('utente-morada').value          = utente.morada || '';
+        document.getElementById('utente-genero').value          = utente.genero || '';
+        document.getElementById('utente-medicoId').value        = utente.medicoId || '';
+        // campos read-only na edição
+        ['campo-utente-nome','campo-utente-email','campo-utente-pass','campo-utente-nUtente','campo-utente-dataNasc'].forEach(id => {
+            document.getElementById(id).style.display = 'none';
+        });
+    } else {
+        document.getElementById('modal-utente-titulo').textContent = 'Novo Utente';
+        document.getElementById('utente-nome').value             = '';
+        document.getElementById('utente-email').value            = '';
+        document.getElementById('utente-password').value         = '';
+        document.getElementById('utente-nUtente').value          = '';
+        document.getElementById('utente-dataNascimento').value   = '';
+        document.getElementById('utente-telefone').value         = '';
+        document.getElementById('utente-morada').value           = '';
+        document.getElementById('utente-genero').value           = '';
+        document.getElementById('utente-medicoId').value         = '';
+        ['campo-utente-nome','campo-utente-email','campo-utente-pass','campo-utente-nUtente','campo-utente-dataNasc'].forEach(id => {
+            document.getElementById(id).style.display = '';
+        });
+    }
+
+    document.getElementById('modal-utente').style.display = 'flex';
+}
+
+document.getElementById('modal-utente-fechar')?.addEventListener('click', () => {
+    document.getElementById('modal-utente').style.display = 'none';
+});
+
+document.getElementById('modal-utente')?.addEventListener('click', e => {
+    if (e.target === document.getElementById('modal-utente'))
+        document.getElementById('modal-utente').style.display = 'none';
+});
+
+document.getElementById('btn-criar-utente')?.addEventListener('click', () => abrirModalUtente(null));
+
+document.getElementById('modal-utente-guardar')?.addEventListener('click', async () => {
+    const btn = document.getElementById('modal-utente-guardar');
+    btn.disabled = true;
+
+    try {
+        if (utenteEmEdicao) {
+            await api(`/patients/${utenteEmEdicao.utenteId}`, {
+                method: 'PUT',
+                body: JSON.stringify({
+                    telefone: document.getElementById('utente-telefone').value,
+                    morada:   document.getElementById('utente-morada').value,
+                    genero:   document.getElementById('utente-genero').value,
+                    medicoId: document.getElementById('utente-medicoId').value || null,
+                })
+            });
+        } else {
+            await api('/patients', {
+                method: 'POST',
+                body: JSON.stringify({
+                    nome:           document.getElementById('utente-nome').value,
+                    email:          document.getElementById('utente-email').value,
+                    password:       document.getElementById('utente-password').value,
+                    nUtente:        document.getElementById('utente-nUtente').value,
+                    dataNascimento: document.getElementById('utente-dataNascimento').value,
+                    telefone:       document.getElementById('utente-telefone').value,
+                    morada:         document.getElementById('utente-morada').value,
+                    genero:         document.getElementById('utente-genero').value,
+                    medicoId:       document.getElementById('utente-medicoId').value || null,
+                })
+            });
+        }
+        document.getElementById('modal-utente').style.display = 'none';
+        await carregarUtentesAdmin();
+        await carregarUsers();
+    } catch (err) {
+        alert('Erro ao guardar utente: ' + err.message);
+    } finally {
+        btn.disabled = false;
+    }
+});
+
+// ── MODAL ELIMINAR ────────────────────────────────────────
+let eliminarCallback = null;
+
+function abrirModalEliminar(tipo, id, nome) {
+    const label = tipo === 'medico' ? 'médico' : 'utente';
+    document.getElementById('modal-eliminar-msg').textContent =
+        `Tens a certeza que queres eliminar o ${label} "${nome}"? Esta ação não pode ser revertida.`;
+
+    eliminarCallback = async () => {
+        try {
+            const rota = tipo === 'medico' ? `/doctors/${id}` : `/patients/${id}`;
+            await api(rota, { method: 'DELETE' });
+            document.getElementById('modal-eliminar').style.display = 'none';
+            if (tipo === 'medico') await carregarMedicos();
+            else await carregarUtentesAdmin();
+            await carregarUsers();
+        } catch (err) {
+            alert('Erro ao eliminar: ' + err.message);
+        }
+    };
+
+    document.getElementById('modal-eliminar').style.display = 'flex';
+}
+
+document.getElementById('modal-eliminar-fechar')?.addEventListener('click', () => {
+    document.getElementById('modal-eliminar').style.display = 'none';
+});
+
+document.getElementById('modal-eliminar-cancelar')?.addEventListener('click', () => {
+    document.getElementById('modal-eliminar').style.display = 'none';
+});
+
+document.getElementById('modal-eliminar')?.addEventListener('click', e => {
+    if (e.target === document.getElementById('modal-eliminar'))
+        document.getElementById('modal-eliminar').style.display = 'none';
+});
+
+document.getElementById('modal-eliminar-confirmar')?.addEventListener('click', async () => {
+    if (eliminarCallback) await eliminarCallback();
+});
+
+// ── DADOS SIMULADOS ───────────────────────────────────────
+const MEDICOS_DEMO = [
+    { nome: 'Dr. João Silva',    email: 'joao.silva.demo@icarat.pt',    password: 'Demo1234!', especialidade: 'Cardiologia',  telefone: 912000001, nrOrdem: 10001 },
+    { nome: 'Dra. Ana Ferreira', email: 'ana.ferreira.demo@icarat.pt',  password: 'Demo1234!', especialidade: 'Neurologia',   telefone: 912000002, nrOrdem: 10002 },
+    { nome: 'Dr. Carlos Mendes', email: 'carlos.mendes.demo@icarat.pt', password: 'Demo1234!', especialidade: 'Pneumologia',  telefone: 912000003, nrOrdem: 10003 },
+];
+
+function gerarUtentesDemo(medicoIds) {
+    return [
+        { nome: 'Maria Santos',    email: 'maria.santos.demo@icarat.pt',    password: 'Demo1234!', nUtente: 100000001, dataNascimento: '1965-03-12', telefone: 913100001, morada: 'Rua das Flores 10, Lisboa',      genero: 'feminino',   medicoId: medicoIds[0] },
+        { nome: 'António Pereira', email: 'antonio.pereira.demo@icarat.pt', password: 'Demo1234!', nUtente: 100000002, dataNascimento: '1958-07-25', telefone: 913100002, morada: 'Av. da Liberdade 50, Lisboa',    genero: 'masculino',  medicoId: medicoIds[0] },
+        { nome: 'Lurdes Costa',    email: 'lurdes.costa.demo@icarat.pt',    password: 'Demo1234!', nUtente: 100000003, dataNascimento: '1972-11-08', telefone: 913100003, morada: 'Rua do Comércio 22, Porto',      genero: 'feminino',   medicoId: medicoIds[1] },
+        { nome: 'Manuel Rodrigues',email: 'manuel.rodrigues.demo@icarat.pt',password: 'Demo1234!', nUtente: 100000004, dataNascimento: '1980-01-30', telefone: 913100004, morada: 'Praceta dos Pinheiros 5, Braga', genero: 'masculino',  medicoId: medicoIds[1] },
+        { nome: 'Rosa Oliveira',   email: 'rosa.oliveira.demo@icarat.pt',   password: 'Demo1234!', nUtente: 100000005, dataNascimento: '1948-09-17', telefone: 913100005, morada: 'Rua Nova 3, Coimbra',            genero: 'feminino',   medicoId: medicoIds[2] },
+    ];
+}
+
+function logSimulado(msg, tipo = 'ok') {
+    const log = document.getElementById('simulados-log');
+    log.style.display = 'block';
+    const linha = document.createElement('div');
+    linha.className = tipo === 'ok' ? 'log-ok' : tipo === 'err' ? 'log-err' : '';
+    linha.textContent = msg;
+    log.appendChild(linha);
+    log.scrollTop = log.scrollHeight;
+}
+
+document.getElementById('btn-gerar-simulados')?.addEventListener('click', async () => {
+    const btn = document.getElementById('btn-gerar-simulados');
+    const log = document.getElementById('simulados-log');
+    btn.disabled = true;
+    log.innerHTML = '';
+    log.style.display = 'block';
+    logSimulado('A iniciar geração de dados de exemplo...');
+
+    const medicoIds = [];
+
+    for (const m of MEDICOS_DEMO) {
+        try {
+            const criado = await api('/doctors', { method: 'POST', body: JSON.stringify(m) });
+            medicoIds.push(criado.medicoId);
+            logSimulado(`✓ Médico criado: ${m.nome}`);
+        } catch (err) {
+            logSimulado(`✗ Erro ao criar médico "${m.nome}": ${err.message}`, 'err');
+            medicoIds.push(null);
+        }
+    }
+
+    const utentesDemo = gerarUtentesDemo(medicoIds.filter(Boolean));
+    for (const u of utentesDemo) {
+        try {
+            await api('/patients', { method: 'POST', body: JSON.stringify(u) });
+            logSimulado(`✓ Utente criado: ${u.nome}`);
+        } catch (err) {
+            logSimulado(`✗ Erro ao criar utente "${u.nome}": ${err.message}`, 'err');
+        }
+    }
+
+    logSimulado('Concluído. Atualiza os tabs para ver os dados.');
+    btn.disabled = false;
+    await carregarUsers();
+    await carregarMedicos();
+    await carregarUtentesAdmin();
+});
+
+document.getElementById('btn-limpar-simulados')?.addEventListener('click', async () => {
+    const btn = document.getElementById('btn-limpar-simulados');
+    const log = document.getElementById('simulados-log');
+    btn.disabled = true;
+    log.innerHTML = '';
+    log.style.display = 'block';
+    logSimulado('A procurar dados de exemplo...');
+
+    try {
+        const users = await api('/users');
+        const demoUsers = users.filter(u => u.email.endsWith('.demo@icarat.pt'));
+
+        if (demoUsers.length === 0) {
+            logSimulado('Não foram encontrados dados de exemplo.');
+        } else {
+            for (const u of demoUsers) {
+                try {
+                    await api(`/users/${u.id}`, { method: 'DELETE' });
+                    logSimulado(`✓ Eliminado: ${u.nome} (${u.email})`);
+                } catch (err) {
+                    logSimulado(`✗ Erro ao eliminar "${u.nome}": ${err.message}`, 'err');
+                }
+            }
+            logSimulado('Limpeza concluída.');
+            await carregarUsers();
+            await carregarMedicos();
+            await carregarUtentesAdmin();
+        }
+    } catch (err) {
+        logSimulado(`Erro: ${err.message}`, 'err');
+    } finally {
+        btn.disabled = false;
+    }
+});
+
 // ── CONFIGURAÇÕES ─────────────────────────────────────────
+const NOMES_CONFIG = {
+    limiarControloInsuficiente: 'Limiar de Controlo Insuficiente',
+    deltaDeterioracao:          'Delta de Deterioração',
+    scoreMaximoPossivel:        'Score Máximo Possível',
+    scoreMinimoPossivel:        'Score Mínimo Possível',
+};
+
 async function carregarConfigs() {
     const container = document.getElementById('tabela-configs');
     try {
@@ -167,7 +638,7 @@ async function carregarConfigs() {
             html += `
                 <div class="config-row">
                     <div class="config-info">
-                        <div class="config-chave">${c.chave}</div>
+                        <div class="config-chave">${NOMES_CONFIG[c.chave] || c.chave}</div>
                         <div class="config-descricao">${c.descricao || ''}</div>
                     </div>
                     <input type="number" class="config-input" data-chave="${c.chave}" value="${c.valor}">
@@ -198,4 +669,6 @@ async function carregarConfigs() {
 
 // ── INIT ──────────────────────────────────────────────────
 carregarUsers();
+carregarMedicos();
+carregarUtentesAdmin();
 carregarConfigs();
