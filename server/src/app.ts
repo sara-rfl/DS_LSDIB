@@ -15,10 +15,10 @@ import caratRoutes from './routes/caratRoutes';
 import alertaRoutes from './routes/alertaRoutes';
 import sintomaRoutes from './routes/sintomaRoutes';
 import medicacaoRoutes from './routes/medicacaoRoutes';
-import exameRoutes from './routes/exameRoutes'
+import exameRoutes from './routes/exameRoutes';
+import fhirRoutes from './routes/fhirRoutes';
 
 const app = express();
-
 app.use(cors());
 app.use(express.static(path.join(__dirname, '..', 'public')));
 app.use(express.json());
@@ -34,11 +34,12 @@ app.use(alertaRoutes);
 app.use(sintomaRoutes);
 app.use(medicacaoRoutes);
 app.use(exameRoutes);
-app.use(auditRoutes);
-
 app.use(errorHandler);
+app.use(fhirRoutes);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Servidor a correr na porta ${PORT}`));
+if (process.env.NODE_ENV !== 'test') {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => console.log(`Servidor a correr na porta ${PORT}`));
+}
 
 export default app;

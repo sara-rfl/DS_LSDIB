@@ -70,5 +70,7 @@ export function atualizarUtente(id: number, dados: any) {
 
 export function eliminarUtente(id: number) {
   obterUtente(id);
-  db.prepare('DELETE FROM utilizador WHERE id = (SELECT utilizadorId FROM utente WHERE id = ?)').run(id);
+  const utente = db.prepare('SELECT utilizadorId FROM utente WHERE id = ?').get(id) as any;
+  db.prepare('DELETE FROM utente WHERE id = ?').run(id);
+  db.prepare('DELETE FROM utilizador WHERE id = ?').run(utente.utilizadorId);
 }

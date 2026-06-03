@@ -2,7 +2,7 @@
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     // File Layout
-    "rootDir": "./",
+    "rootDir": "../",
     "outDir": "./dist",
 
     "target": "ES6",
@@ -10,9 +10,9 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-
+    "ignoreDeprecations": "6.0",
     // Environment Settings
-    // "types": ["node"], // Uncomment if needed
+    "types": ["node", "jest"],
     // "lib": ["esnext"], // Uncomment if needed
     // "types": ["node"], // Uncomment if needed
     // and npm install -D @types/node
@@ -42,6 +42,6 @@
      "moduleDetection": "force", // Uncomment if needed
   },
 
-  "include": ["./**/*.ts"],
+  "include": ["./**/*.ts", "../contracts/**/*.ts"],
   "exclude": ["./dist"]
 }

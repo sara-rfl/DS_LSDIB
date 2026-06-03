@@ -2,6 +2,9 @@
 import Database from 'better-sqlite3';
 import path from 'path';
 
-const db: any = new Database(path.join(__dirname, '..', '..', 'db', 'database.db'));
+const dbPath = process.env.DB_PATH
+    ?? path.join(__dirname, '..', '..', 'db', 'database.db');
+
+const db: any = new Database(dbPath);
 
 export default db;

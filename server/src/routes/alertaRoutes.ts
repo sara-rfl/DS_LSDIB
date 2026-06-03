@@ -10,6 +10,7 @@ const router = Router();
 router.get('/patients/:id/alertas', autenticar, autorizar('medico'), alertaController.listarPorUtente);
 router.get('/api/alertas', autenticar, autorizar('medico'), alertaController.listar);
 router.get('/api/alertas/:id', autenticar, autorizar('medico'), alertaController.obter);
+router.get('/doctors/:id/alerts', autenticar, autorizar('medico', 'admin'), alertaController.listarPorMedico);
 router.patch('/api/alertas/:id', autenticar, autorizar('medico'), validateBody(atualizarEstadoAlertaSchema), alertaController.atualizarEstado);
 router.post('/api/alertas/:id/acoes', autenticar, autorizar('medico'), validateBody(adicionarAcaoAlertaSchema), alertaController.adicionarAcao);
 

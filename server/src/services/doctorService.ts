@@ -60,7 +60,9 @@ export function atualizarMedico(id: number, dados: any) {
 
 export function eliminarMedico(id: number) {
   obterMedico(id);
-  db.prepare('DELETE FROM utilizador WHERE id = (SELECT utilizadorId FROM medico WHERE id = ?)').run(id);
+  const medico = db.prepare('SELECT utilizadorId FROM medico WHERE id = ?').get(id) as any;
+  db.prepare('DELETE FROM medico WHERE id = ?').run(id);
+  db.prepare('DELETE FROM utilizador WHERE id = ?').run(medico.utilizadorId);
 }
 
 export function getMedicoIdPorUtilizadorId(utenteId: number): number | null {
