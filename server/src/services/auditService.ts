@@ -45,3 +45,7 @@ export function listar(limite = 200) {
     LIMIT ?
   `).all(limite);
 }
+
+export function limpar() {
+  db.prepare('DELETE FROM registoAuditoria').run();
+}

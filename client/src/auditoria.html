@@ -18,12 +18,17 @@
                 <h1>Registo de Auditoria</h1>
                 <span id="contagem-registos" class="contagem-badge">—</span>
             </div>
-            <input type="text" id="pesquisa-audit" class="search-input" placeholder="Filtrar por utilizador, recurso...">
+            <div style="display:flex; gap:10px; align-items:center;">
+                <input type="text" id="pesquisa-audit" class="search-input" placeholder="Filtrar por utilizador, recurso...">
+                <button id="btn-limpar" class="btn-limpar-audit">Limpar registos</button>
+            </div>
         </div>
 
         <div id="tabela-container" class="card-tabela">
             <p class="estado-mensagem">A carregar registos...</p>
         </div>
+
+        <div id="paginacao" class="paginacao-container"></div>
     </main>
 
     <script type="module" src="./pages/auditoria.js"></script>

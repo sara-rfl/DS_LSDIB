@@ -8,3 +8,10 @@ export function listar(req: Request, res: Response, next: NextFunction) {
     res.json(registos);
   } catch (erro) { next(erro); }
 }
+
+export function limpar(req: Request, res: Response, next: NextFunction) {
+  try {
+    auditService.limpar();
+    res.json({ mensagem: 'Registos apagados com sucesso.' });
+  } catch (erro) { next(erro); }
+}

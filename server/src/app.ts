@@ -25,6 +25,7 @@ app.use(express.json());
 app.use(logger);
 app.use(authRoutes);
 app.use(auditar);
+app.use(auditRoutes);
 app.use(patientRoutes);
 app.use(doctorRoutes);
 app.use(configRoutes);

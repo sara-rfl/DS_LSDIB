@@ -21,7 +21,7 @@ export function login(email: string, password: string) {
   }
 
   const token = jwt.sign(
-    { id: utilizador.id, perfil: utilizador.perfil },
+    { id: utilizador.id, perfil: utilizador.perfil, nome: utilizador.nome },
     process.env.JWT_SECRET as string,
     { expiresIn: '8h' }
   );
