@@ -7,7 +7,7 @@ import { submeterCaratSchema } from '../../../contracts/schemas';
 
 const router = Router();
 
-router.post('/patients/:id/carat', autenticar, autorizar('utente', 'medico'), validateBody(submeterCaratSchema), caratController.submeter);
+router.post('/patients/:id/carat', autenticar, autorizar('utente'), validateBody(submeterCaratSchema), caratController.submeter);
 router.get('/patients/:id/carat', autenticar, autorizar('utente', 'medico', 'admin'), caratController.historico);
 router.get('/carat/:evalId', autenticar, autorizar('utente', 'medico', 'admin'), caratController.getAvaliacao);
 

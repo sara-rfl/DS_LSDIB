@@ -18,22 +18,24 @@ if (btnLogout) {
 const menuPerfil = document.getElementById('menu-perfil');
 const menuSintomas = document.getElementById('menu-sintomas');
 const menuMedicacao = document.getElementById('menu-medicacao');
+const menuCarat = document.getElementById('menu-carat');
+const menuHistoricoCarat = document.getElementById('menu-historico-carat');
 const seccaoPerfil = document.getElementById('seccao-perfil');
 const seccaoSintomas = document.getElementById('seccao-sintomas');
 const seccaoMedicacao = document.getElementById('seccao-medicacao');
+const seccaoCarat = document.getElementById('seccao-carat');
+const seccaoHistoricoCarat = document.getElementById('seccao-historico-carat');
 function esconderTudo() {
-    if (seccaoPerfil)
-        seccaoPerfil.style.display = 'none';
-    if (seccaoSintomas)
-        seccaoSintomas.style.display = 'none';
-    if (seccaoMedicacao)
-        seccaoMedicacao.style.display = 'none';
-    if (menuPerfil)
-        menuPerfil.classList.remove('active');
-    if (menuSintomas)
-        menuSintomas.classList.remove('active');
-    if (menuMedicacao)
-        menuMedicacao.classList.remove('active');
+    if (seccaoPerfil) seccaoPerfil.style.display = 'none';
+    if (seccaoSintomas) seccaoSintomas.style.display = 'none';
+    if (seccaoMedicacao) seccaoMedicacao.style.display = 'none';
+    if (seccaoCarat) seccaoCarat.style.display = 'none';
+    if (seccaoHistoricoCarat) seccaoHistoricoCarat.style.display = 'none';
+    if (menuPerfil) menuPerfil.classList.remove('active');
+    if (menuSintomas) menuSintomas.classList.remove('active');
+    if (menuMedicacao) menuMedicacao.classList.remove('active');
+    if (menuCarat) menuCarat.classList.remove('active');
+    if (menuHistoricoCarat) menuHistoricoCarat.classList.remove('active');
 }
 if (menuPerfil && menuSintomas && menuMedicacao) {
     menuPerfil.addEventListener('click', () => {
@@ -52,6 +54,27 @@ if (menuPerfil && menuSintomas && menuMedicacao) {
         seccaoMedicacao.style.display = 'block';
         menuMedicacao.classList.add('active');
         carregarMedicacao();
+    });
+}
+if (menuCarat) {
+    menuCarat.addEventListener('click', () => {
+        esconderTudo();
+        seccaoCarat.style.display = 'block';
+        menuCarat.classList.add('active');
+        const btnIrCarat = document.getElementById('btn-ir-carat');
+        if (btnIrCarat) {
+            btnIrCarat.onclick = () => {
+                window.location.href = `carat.html?id=${utenteId}`;
+            };
+        }
+    });
+}
+if (menuHistoricoCarat) {
+    menuHistoricoCarat.addEventListener('click', () => {
+        esconderTudo();
+        seccaoHistoricoCarat.style.display = 'block';
+        menuHistoricoCarat.classList.add('active');
+        carregarHistoricoCarat();
     });
 }
 // 3. COMUNICAR COM A API 
@@ -267,6 +290,58 @@ async function carregarMedicacao() {
     }
     catch (erro) {
         container.innerHTML = '<p style="color: #e74c3c;">Os serviços clínicos não estão disponíveis de momento.</p>';
+    }
+}
+async function carregarHistoricoCarat() {
+    const container = document.getElementById('tabela-historico-carat-container');
+    if (!container || !utenteId) return;
+    try {
+        const resposta = await fetch(`http://localhost:3000/patients/${utenteId}/carat`, {
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!resposta.ok) throw new Error('Falha ao obter histórico.');
+        const avaliacoes = await resposta.json();
+        if (avaliacoes.length === 0) {
+            container.innerHTML = '<p style="padding: 15px; background-color: #f8f9fa; border-radius: 6px;">Ainda não existem avaliações CARAT registadas.</p>';
+            return;
+        }
+        let html = `
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <tr style="background-color: #f0f4f8; border-bottom: 2px solid #dcdcdc;">
+                    <th style="padding: 12px;">Data</th>
+                    <th style="padding: 12px;">Score Rinite</th>
+                    <th style="padding: 12px;">Score Asma</th>
+                    <th style="padding: 12px;">Score Total</th>
+                    <th style="padding: 12px;">Estado</th>
+                </tr>
+        `;
+        avaliacoes.forEach((a) => {
+            const data = a.dataAvaliacao ? new Date(a.dataAvaliacao).toLocaleDateString('pt-PT') : 'N/A';
+            const riniteControlada = a.scoreRinite > 8;
+            const asmaControlada = a.scoreAsma >= 16;
+            const controlado = (riniteControlada && asmaControlada) || a.scoreTotal > 24;
+            const estadoTexto = controlado ? 'Controlado' : 'Não Controlado';
+            const estadoCor = controlado ? '#155724' : '#721c24';
+            const estadoFundo = controlado ? '#d4edda' : '#f8d7da';
+            html += `
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 12px;">${data}</td>
+                    <td style="padding: 12px;">${a.scoreRinite}</td>
+                    <td style="padding: 12px;">${a.scoreAsma}</td>
+                    <td style="padding: 12px; font-weight: bold;">${a.scoreTotal}</td>
+                    <td style="padding: 12px;">
+                        <span style="background-color: ${estadoFundo}; color: ${estadoCor}; padding: 4px 10px; border-radius: 12px; font-size: 13px; font-weight: 600;">
+                            ${estadoTexto}
+                        </span>
+                    </td>
+                </tr>
+            `;
+        });
+        html += '</table>';
+        container.innerHTML = html;
+    } catch (erro) {
+        container.innerHTML = '<p style="color: #e74c3c;">Erro ao carregar o histórico CARAT.</p>';
     }
 }
 if (token) {

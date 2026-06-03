@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 
 export function listarUtentes() {
   return db.prepare(`
-    SELECT u.id, u.nome, u.email, ut.nUtente, ut.dataNascimento, ut.telefone, ut.morada, ut.genero, ut.medicoId
+    SELECT u.id, u.nome, u.email, u.perfil, ut.nUtente, ut.dataNascimento, ut.telefone, ut.morada, ut.genero, ut.medicoId
     FROM utilizador u
     JOIN utente ut ON ut.utilizadorId = u.id
   `).all();

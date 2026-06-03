@@ -52,6 +52,25 @@ body {
     box-shadow: 0 4px 10px rgba(220, 38, 38, 0.25);
 }
 
+.btn-nav {
+    background-color: transparent;
+    color: #1a73e8;
+    border: 1.5px solid #1a73e8;
+    padding: 7px 18px;
+    border-radius: 8px;
+    font-size: 17px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-nav:hover {
+    background-color: #1a73e8;
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(26, 115, 232, 0.25);
+}
+
 /* LAYOUT */
 .container-lista {
     max-width: 1040px;
