@@ -13,73 +13,63 @@ if (btnLogout) {
     });
 }
 // ---------------------------------------------------------
-// 2. LÓGICA DO MENU LATERAL 
+// 2. LÓGICA DE NAVEGAÇÃO DOS CARTÕES E SECÇÕES
 // ---------------------------------------------------------
-const menuPerfil = document.getElementById('menu-perfil');
-const menuSintomas = document.getElementById('menu-sintomas');
-const menuMedicacao = document.getElementById('menu-medicacao');
-const menuCarat = document.getElementById('menu-carat');
-const menuHistoricoCarat = document.getElementById('menu-historico-carat');
+const seccaoInicio = document.getElementById('seccao-inicio');
 const seccaoPerfil = document.getElementById('seccao-perfil');
 const seccaoSintomas = document.getElementById('seccao-sintomas');
 const seccaoMedicacao = document.getElementById('seccao-medicacao');
 const seccaoCarat = document.getElementById('seccao-carat');
-const seccaoHistoricoCarat = document.getElementById('seccao-historico-carat');
-function esconderTudo() {
-    if (seccaoPerfil) seccaoPerfil.style.display = 'none';
-    if (seccaoSintomas) seccaoSintomas.style.display = 'none';
-    if (seccaoMedicacao) seccaoMedicacao.style.display = 'none';
-    if (seccaoCarat) seccaoCarat.style.display = 'none';
-    if (seccaoHistoricoCarat) seccaoHistoricoCarat.style.display = 'none';
-    if (menuPerfil) menuPerfil.classList.remove('active');
-    if (menuSintomas) menuSintomas.classList.remove('active');
-    if (menuMedicacao) menuMedicacao.classList.remove('active');
-    if (menuCarat) menuCarat.classList.remove('active');
-    if (menuHistoricoCarat) menuHistoricoCarat.classList.remove('active');
+const seccaoHistCarat = document.getElementById('seccao-hist-carat');
+const cardPerfil = document.getElementById('card-perfil');
+const cardSintomas = document.getElementById('card-sintomas');
+const cardMedicacao = document.getElementById('card-medicacao');
+const cardCarat = document.getElementById('card-carat');
+const cardHistCarat = document.getElementById('card-hist-carat');
+const botoesVoltar = document.querySelectorAll('.btn-voltar');
+function mostrarSeccao(seccaoAberta) {
+    if (seccaoInicio)
+        seccaoInicio.style.display = 'none';
+    if (seccaoPerfil)
+        seccaoPerfil.style.display = 'none';
+    if (seccaoSintomas)
+        seccaoSintomas.style.display = 'none';
+    if (seccaoMedicacao)
+        seccaoMedicacao.style.display = 'none';
+    if (seccaoCarat)
+        seccaoCarat.style.display = 'none';
+    if (seccaoHistCarat)
+        seccaoHistCarat.style.display = 'none';
+    if (seccaoAberta)
+        seccaoAberta.style.display = 'block';
 }
-if (menuPerfil && menuSintomas && menuMedicacao) {
-    menuPerfil.addEventListener('click', () => {
-        esconderTudo();
-        seccaoPerfil.style.display = 'block';
-        menuPerfil.classList.add('active');
+if (cardPerfil)
+    cardPerfil.addEventListener('click', () => {
+        mostrarSeccao(seccaoPerfil);
+        carregarDadosPerfil();
     });
-    menuSintomas.addEventListener('click', () => {
-        esconderTudo();
-        seccaoSintomas.style.display = 'block';
-        menuSintomas.classList.add('active');
+if (cardSintomas)
+    cardSintomas.addEventListener('click', () => {
+        mostrarSeccao(seccaoSintomas);
         carregarSintomas();
     });
-    menuMedicacao.addEventListener('click', () => {
-        esconderTudo();
-        seccaoMedicacao.style.display = 'block';
-        menuMedicacao.classList.add('active');
+if (cardMedicacao)
+    cardMedicacao.addEventListener('click', () => {
+        mostrarSeccao(seccaoMedicacao);
         carregarMedicacao();
     });
-}
-if (menuCarat) {
-    menuCarat.addEventListener('click', () => {
-        esconderTudo();
-        seccaoCarat.style.display = 'block';
-        menuCarat.classList.add('active');
-        const btnIrCarat = document.getElementById('btn-ir-carat');
-        if (btnIrCarat) {
-            btnIrCarat.onclick = () => {
-                window.location.href = `carat.html?id=${utenteId}`;
-            };
-        }
-    });
-}
-if (menuHistoricoCarat) {
-    menuHistoricoCarat.addEventListener('click', () => {
-        esconderTudo();
-        seccaoHistoricoCarat.style.display = 'block';
-        menuHistoricoCarat.classList.add('active');
-        carregarHistoricoCarat();
-    });
-}
-// 3. COMUNICAR COM A API 
+if (cardCarat)
+    cardCarat.addEventListener('click', () => mostrarSeccao(seccaoCarat));
+if (cardHistCarat)
+    cardHistCarat.addEventListener('click', () => mostrarSeccao(seccaoHistCarat));
+botoesVoltar.forEach(btn => {
+    btn.addEventListener('click', () => mostrarSeccao(seccaoInicio));
+});
+// ---------------------------------------------------------
+// 3. COMUNICAR COM A API (PERFIL, SINTOMAS E MEDICAÇÃO)
+// ---------------------------------------------------------
 async function carregarDadosPerfil() {
-    const container = document.getElementById('seccao-perfil');
+    const container = document.getElementById('conteudo-perfil');
     if (!container || !utenteId)
         return;
     try {
@@ -94,79 +84,80 @@ async function carregarDadosPerfil() {
             throw new Error('Erro ao carregar perfil.');
         const dadosUtente = await resposta.json();
         container.innerHTML = `
-            <h2>Atualizar Dados Pessoais</h2>
-            <form id="form-atualizar-perfil" style="display: flex; flex-direction: column; gap: 15px; max-width: 400px;">
+            <div style="max-width: 650px; margin: 0 auto; background-color: #ffffff; padding: 32px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.05); border: 1px solid #e5e7eb;">
+                <h2 style="text-align: center; margin-bottom: 24px; color: #1a1a2e;">Atualizar Dados Pessoais</h2>
                 
-                <div>
-                    <label style="font-weight: bold; font-size: 14px; color: #555;">Nome:</label>
-                    <input type="text" id="perfil-nome" class="search-input" value="${dadosUtente.nome || ''}" disabled style="width: 100%; background-color: #f8f9fa; cursor: not-allowed;">
-                </div>
-                
-                <div>
-                    <label style="font-weight: bold; font-size: 14px; color: #555;">Email:</label>
-                    <input type="email" id="perfil-email" class="search-input" value="${dadosUtente.email || ''}" disabled style="width: 100%; background-color: #f8f9fa; cursor: not-allowed;">
-                    <small style="color: #888;">Campos de identidade bloqueados por motivos de segurança.</small>
-                </div>
-
-                <div>
-                    <label style="font-weight: bold; font-size: 14px; color: #555;">Médico Responsável:</label>
-                    <input type="text" id="perfil-medico" class="search-input" value="Dr(a). ${dadosUtente.medicoNome || 'Não atribuído'}" disabled style="width: 100%; background-color: #f8f9fa; cursor: not-allowed; color: #3498db; font-weight: bold;">
-                </div>
-                <div style="display: flex; gap: 15px;">
-                    <div style="flex: 1;">
-                        <label style="font-weight: bold; font-size: 14px; color: #555;">Nº de Utente:</label>
-                        <input type="number" id="perfil-nutente" class="search-input" value="${dadosUtente.nUtente || ''}" disabled style="width: 100%; background-color: #f8f9fa; cursor: not-allowed;">
+                <form id="form-atualizar-perfil" style="display: flex; flex-direction: column; gap: 16px;">
+                    
+                    <div style="display: flex; gap: 15px;">
+                        <div style="flex: 1;">
+                            <label style="font-weight: bold; font-size: 14px; color: #555;">Nome:</label>
+                            <input type="text" id="perfil-nome" class="search-input" value="${dadosUtente.nome || ''}" disabled style="width: 100%; background-color: #f8f9fa; cursor: not-allowed;">
+                        </div>
+                        <div style="flex: 1;">
+                            <label style="font-weight: bold; font-size: 14px; color: #555;">Email:</label>
+                            <input type="email" id="perfil-email" class="search-input" value="${dadosUtente.email || ''}" disabled style="width: 100%; background-color: #f8f9fa; cursor: not-allowed;">
+                        </div>
                     </div>
-                    <div style="flex: 1;">
-                        <label style="font-weight: bold; font-size: 14px; color: #555;">Data de Nascimento:</label>
-                        <input type="date" id="perfil-nascimento" class="search-input" value="${dadosUtente.dataNascimento || ''}" disabled style="width: 100%; background-color: #f8f9fa; cursor: not-allowed;">
-                    </div>
-                </div>
+                    <small style="color: #888; text-align: center; margin-top: -10px; margin-bottom: 5px;">Campos de identidade bloqueados por motivos de segurança.</small>
 
-                <div style="display: flex; gap: 15px;">
-                    <div style="flex: 1;">
-                        <label style="font-weight: bold; font-size: 14px; color: #555;">Telefone:</label>
-                        <input type="tel" id="perfil-telefone" class="search-input" value="${dadosUtente.telefone || ''}" style="width: 100%;">
+                    <div>
+                        <label style="font-weight: bold; font-size: 14px; color: #555;">Médico Responsável:</label>
+                        <input type="text" id="perfil-medico" class="search-input" value="Dr(a). ${dadosUtente.medicoNome || 'Não atribuído'}" disabled style="width: 100%; background-color: #eff6ff; cursor: not-allowed; color: #1a73e8; font-weight: bold;">
                     </div>
-                    <div style="flex: 1;">
-                        <label style="font-weight: bold; font-size: 14px; color: #555;">Género:</label>
-                        <select id="perfil-genero" class="search-input" style="width: 100%; cursor: pointer;">
-                            <option value="feminino" ${dadosUtente.genero === 'feminino' ? 'selected' : ''}>Feminino</option>
-                            <option value="masculino" ${dadosUtente.genero === 'masculino' ? 'selected' : ''}>Masculino</option>
-                        </select>
+
+                    <div style="display: flex; gap: 15px;">
+                        <div style="flex: 1;">
+                            <label style="font-weight: bold; font-size: 14px; color: #555;">Nº de Utente:</label>
+                            <input type="number" id="perfil-nutente" class="search-input" value="${dadosUtente.nUtente || ''}" disabled style="width: 100%; background-color: #f8f9fa; cursor: not-allowed;">
+                        </div>
+                        <div style="flex: 1;">
+                            <label style="font-weight: bold; font-size: 14px; color: #555;">Data de Nascimento:</label>
+                            <input type="date" id="perfil-nascimento" class="search-input" value="${dadosUtente.dataNascimento || ''}" disabled style="width: 100%; background-color: #f8f9fa; cursor: not-allowed;">
+                        </div>
                     </div>
-                </div>
 
-                <div>
-                    <label style="font-weight: bold; font-size: 14px; color: #555;">Morada:</label>
-                    <input type="text" id="perfil-morada" class="search-input" value="${dadosUtente.morada || ''}" style="width: 100%;">
-                </div>
+                    <div style="display: flex; gap: 15px;">
+                        <div style="flex: 1;">
+                            <label style="font-weight: bold; font-size: 14px; color: #555;">Telefone:</label>
+                            <input type="tel" id="perfil-telefone" class="search-input" value="${dadosUtente.telefone || ''}" style="width: 100%;">
+                        </div>
+                        <div style="flex: 1;">
+                            <label style="font-weight: bold; font-size: 14px; color: #555;">Género:</label>
+                            <select id="perfil-genero" class="search-input" style="width: 100%; cursor: pointer;">
+                                <option value="feminino" ${dadosUtente.genero === 'feminino' ? 'selected' : ''}>Feminino</option>
+                                <option value="masculino" ${dadosUtente.genero === 'masculino' ? 'selected' : ''}>Masculino</option>
+                            </select>
+                        </div>
+                    </div>
 
-                <button type="submit" id="btn-guardar" style="background-color: #3498db; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; transition: background-color 0.3s;">
-                    Guardar Alterações
-                </button>
-                <p id="mensagem-perfil" style="display: none; margin-top: 10px; font-weight: bold; text-align: center; padding: 10px; border-radius: 6px;"></p>
-            </form>
+                    <div>
+                        <label style="font-weight: bold; font-size: 14px; color: #555;">Morada:</label>
+                        <input type="text" id="perfil-morada" class="search-input" value="${dadosUtente.morada || ''}" style="width: 100%;">
+                    </div>
+
+                    <button type="submit" id="btn-guardar" style="background-color: #1a73e8; color: white; border: none; padding: 14px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; transition: all 0.2s; font-size: 15px; box-shadow: 0 4px 12px rgba(26,115,232,0.3);">
+                        Guardar Alterações
+                    </button>
+                    <p id="mensagem-perfil" style="display: none; margin-top: 10px; font-weight: bold; text-align: center; padding: 10px; border-radius: 6px;"></p>
+                </form>
+            </div>
         `;
-        // 2. O SISTEMA NERVOSO: Lógica para enviar os dados de volta para a API
         const formAtualizar = document.getElementById('form-atualizar-perfil');
         const mensagemErro = document.getElementById('mensagem-perfil');
         if (formAtualizar) {
             formAtualizar.addEventListener('submit', async (evento) => {
-                evento.preventDefault(); // Impede a página de fazer refresh ao submeter
-                // Vamos apanhar apenas os valores das gavetas que o utente pode alterar
+                evento.preventDefault();
                 const telefoneNovo = document.getElementById('perfil-telefone').value;
                 const generoNovo = document.getElementById('perfil-genero').value;
                 const moradaNova = document.getElementById('perfil-morada').value;
                 try {
-                    // Enviamos um pedido PUT (Atualizar) para o endpoint do paciente específico
                     const respostaAtualizacao = await fetch(`http://localhost:3000/patients/${utenteId}`, {
                         method: 'PUT',
                         headers: {
                             'Authorization': `Bearer ${token}`,
                             'Content-Type': 'application/json'
                         },
-                        // Só enviamos os campos editáveis
                         body: JSON.stringify({
                             telefone: telefoneNovo,
                             genero: generoNovo,
@@ -224,7 +215,6 @@ async function carregarSintomas() {
                 </tr>
         `;
         sintomas.forEach((s) => {
-            // Cortamos a data para não mostrar as horas se não quisermos
             const dataCortada = s.dataInicioSintoma ? s.dataInicioSintoma.split(' ')[0] : 'N/A';
             html += `
                 <tr style="border-bottom: 1px solid #eee;">
@@ -267,13 +257,11 @@ async function carregarMedicacao() {
                 </tr>
         `;
         medicacoes.forEach((m) => {
-            // Lógica para calcular os dias entre a data de início e de fim
-            let duracaoTexto = "Uso Contínuo"; // Assume contínuo se dataFim for null
+            let duracaoTexto = "Uso Contínuo";
             if (m.dataInicio && m.dataFim) {
                 const dataInicial = new Date(m.dataInicio).getTime();
                 const dataFinal = new Date(m.dataFim).getTime();
                 const diferencaMilissegundos = dataFinal - dataInicial;
-                // Converte milissegundos para dias
                 const diasTratamento = Math.ceil(diferencaMilissegundos / (1000 * 60 * 60 * 24));
                 duracaoTexto = `${diasTratamento} dias`;
             }
@@ -292,58 +280,58 @@ async function carregarMedicacao() {
         container.innerHTML = '<p style="color: #e74c3c;">Os serviços clínicos não estão disponíveis de momento.</p>';
     }
 }
-async function carregarHistoricoCarat() {
-    const container = document.getElementById('tabela-historico-carat-container');
-    if (!container || !utenteId) return;
-    try {
-        const resposta = await fetch(`http://localhost:3000/patients/${utenteId}/carat`, {
-            method: 'GET',
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (!resposta.ok) throw new Error('Falha ao obter histórico.');
-        const avaliacoes = await resposta.json();
-        if (avaliacoes.length === 0) {
-            container.innerHTML = '<p style="padding: 15px; background-color: #f8f9fa; border-radius: 6px;">Ainda não existem avaliações CARAT registadas.</p>';
-            return;
+// ---------------------------------------------------------
+// 4. LÓGICA DO QUESTIONÁRIO CARAT
+// ---------------------------------------------------------
+const formCarat = document.getElementById('form-carat');
+if (formCarat) {
+    formCarat.addEventListener('submit', async (evento) => {
+        evento.preventDefault();
+        const respostas = [];
+        for (let i = 0; i < 10; i++) {
+            const selecionado = document.querySelector(`input[name="q${i}"]:checked`);
+            if (!selecionado) {
+                alert(`Por favor responda à pergunta número ${i + 1}.`);
+                return;
+            }
+            respostas.push(Number(selecionado.value));
         }
-        let html = `
-            <table style="width: 100%; border-collapse: collapse; text-align: left;">
-                <tr style="background-color: #f0f4f8; border-bottom: 2px solid #dcdcdc;">
-                    <th style="padding: 12px;">Data</th>
-                    <th style="padding: 12px;">Score Rinite</th>
-                    <th style="padding: 12px;">Score Asma</th>
-                    <th style="padding: 12px;">Score Total</th>
-                    <th style="padding: 12px;">Estado</th>
-                </tr>
-        `;
-        avaliacoes.forEach((a) => {
-            const data = a.dataAvaliacao ? new Date(a.dataAvaliacao).toLocaleDateString('pt-PT') : 'N/A';
-            const riniteControlada = a.scoreRinite > 8;
-            const asmaControlada = a.scoreAsma >= 16;
-            const controlado = (riniteControlada && asmaControlada) || a.scoreTotal > 24;
-            const estadoTexto = controlado ? 'Controlado' : 'Não Controlado';
-            const estadoCor = controlado ? '#155724' : '#721c24';
-            const estadoFundo = controlado ? '#d4edda' : '#f8d7da';
-            html += `
-                <tr style="border-bottom: 1px solid #eee;">
-                    <td style="padding: 12px;">${data}</td>
-                    <td style="padding: 12px;">${a.scoreRinite}</td>
-                    <td style="padding: 12px;">${a.scoreAsma}</td>
-                    <td style="padding: 12px; font-weight: bold;">${a.scoreTotal}</td>
-                    <td style="padding: 12px;">
-                        <span style="background-color: ${estadoFundo}; color: ${estadoCor}; padding: 4px 10px; border-radius: 12px; font-size: 13px; font-weight: 600;">
-                            ${estadoTexto}
-                        </span>
-                    </td>
-                </tr>
-            `;
-        });
-        html += '</table>';
-        container.innerHTML = html;
-    } catch (erro) {
-        container.innerHTML = '<p style="color: #e74c3c;">Erro ao carregar o histórico CARAT.</p>';
-    }
+        try {
+            const resposta = await fetch(`http://localhost:3000/patients/${utenteId}/carat`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ respostas })
+            });
+            if (!resposta.ok)
+                throw new Error('Erro ao submeter o questionário.');
+            const resultado = await resposta.json();
+            mostrarResultadoCarat(resultado);
+            formCarat.reset();
+        }
+        catch (erro) {
+            alert('Erro ao submeter o questionário. Verifique a ligação ao servidor.');
+        }
+    });
 }
-if (token) {
-    carregarDadosPerfil();
+function mostrarResultadoCarat(resultado) {
+    const divResultado = document.getElementById('resultado-carat');
+    if (!divResultado)
+        return;
+    divResultado.style.display = 'block';
+    document.getElementById('resultado-geral').textContent = 'Estado geral: ' + resultado.interpretacao.geral;
+    document.getElementById('resultado-rinite').textContent = 'Rinite: ' + resultado.interpretacao.rinite;
+    document.getElementById('resultado-asma').textContent = 'Asma: ' + resultado.interpretacao.asma;
+    const lista = document.getElementById('lista-recomendacoes');
+    if (lista) {
+        lista.innerHTML = '';
+        resultado.recomendacoes.forEach((rec) => {
+            const item = document.createElement('li');
+            item.textContent = rec;
+            lista.appendChild(item);
+        });
+    }
+    divResultado.scrollIntoView({ behavior: 'smooth' });
 }

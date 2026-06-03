@@ -3,34 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema SauDInoB - Portal do Utente</title>
+    <title>iCARAT - Portal do Utente</title>
     <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
     <nav class="top-nav">
-        <h2 class="logo">Sistema SauDInoB - Portal do Utente</h2>
-        <button id="btn-logout" class="btn-move-out">log out</button>
+        <h2 class="logo">iCARAT - Portal do Utente</h2>
+        <button id="btn-logout" class="btn-move-out">Log Out</button>
     </nav>
 
-    <main class="dashboard-layout">
+   <main class="dashboard-layout">
         
-        <aside class="sidebar">
-            <ul class="sidebar-menu">
-                <li class="active" id="menu-perfil">O Meu Perfil</li>
-                <li id="menu-sintomas">Consultar Sintomas</li>
-                <li id="menu-medicacao">Consultar Medicação</li>
-                <li id="menu-carat">Questionário CARAT</li>
-                <li id="menu-historico-carat">Histórico CARAT</li>
-            </ul>
-        </aside>
-
-        <section class="content-area">
+        <section class="content-area" style="width: 100%;">
             
-            <div id="seccao-perfil" class="seccao-conteudo">
-                <p>A carregar os teus dados da clínica...</p>
+            <div id="seccao-inicio" class="seccao-conteudo">
+                <h2>Bem-vindo ao Portal do Utente</h2>
+                <p style="color: #6b7280; margin-bottom: 24px;">Selecione uma das opções abaixo para gerir a sua saúde.</p>
+                
+                <div class="grid-opcoes">
+                    <div class="cartao-opcao" id="card-perfil">
+                        <h3>O Meu Perfil</h3>
+                        <p>Atualizar dados pessoais, morada e contactos</p>
+                    </div>
+                    <div class="cartao-opcao" id="card-sintomas">
+                        <h3>Sintomas</h3>
+                        <p>Ver histórico de sintomas registados</p>
+                    </div>
+                    <div class="cartao-opcao" id="card-medicacao">
+                        <h3>Medicação</h3>
+                        <p>Consultar plano de medicação ativo</p>
+                    </div>
+                    <div class="cartao-opcao" id="card-carat">
+                        <h3>Questionário CARAT</h3>
+                        <p>Preencher a avaliação de controlo da asma e rinite</p>
+                    </div>
+                    <div class="cartao-opcao" id="card-hist-carat">
+                        <h3>Histórico CARAT</h3>
+                        <p>Consultar resultados de questionários anteriores</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="seccao-perfil" class="seccao-conteudo" style="display: none;">
+                <button class="btn-voltar">⬅ Voltar ao Início</button>
+                <div id="conteudo-perfil"></div>
             </div>
 
             <div id="seccao-sintomas" class="seccao-conteudo" style="display: none;">
+                <button class="btn-voltar">⬅ Voltar ao Início</button>
                 <h2>Histórico de Sintomas</h2>
                 <div id="tabela-sintomas-container">
                     <p style="color: #888;">A carregar registos clínicos...</p>
@@ -38,25 +58,110 @@
             </div>
 
             <div id="seccao-medicacao" class="seccao-conteudo" style="display: none;">
+                <button class="btn-voltar">⬅ Voltar ao Início</button>
                 <h2>Plano de Medicação Ativo</h2>
                 <div id="tabela-medicacao-container">
                     <p style="color: #888;">A carregar prescrições médicas...</p>
                 </div>
             </div>
 
-            <div id="seccao-carat" class="seccao-conteudo" style="display: none;">
+           <div id="seccao-carat" class="seccao-conteudo" style="display: none;">
+                <button class="btn-voltar">⬅ Voltar ao Início</button>
                 <h2>Questionário CARAT</h2>
-                <p style="color: #555; margin-bottom: 24px;">O questionário CARAT avalia o controlo da sua rinite alérgica e asma nas últimas 4 semanas. Demora cerca de 2 minutos a preencher.</p>
-                <button id="btn-ir-carat" style="background-color: #1a73e8; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer;">
-                    Preencher Questionário
-                </button>
+                
+                <p style="color: #555; margin-bottom: 20px;">Por causa das suas doenças alérgicas respiratórias (asma/rinite/alergia), em média nas últimas <u>4 semanas</u>, <b>quantas vezes teve:</b></p>
+                
+                <form id="form-carat" style="display: flex; flex-direction: column; gap: 15px;">
+                    <div class="pergunta"><p><b>1. Nariz entupido?</b></p>
+                        <label><input type="radio" name="q0" value="3"> Nunca</label>
+                        <label><input type="radio" name="q0" value="2"> 1 ou 2 dias por semana</label>
+                        <label><input type="radio" name="q0" value="1"> Mais de 2 dias por semana</label>
+                        <label><input type="radio" name="q0" value="0"> Quase todos ou todos os dias</label>
+                    </div>
+                    
+                    <div class="pergunta"><p><b>2. Espirros?</b></p>
+                        <label><input type="radio" name="q1" value="3"> Nunca</label>
+                        <label><input type="radio" name="q1" value="2"> 1 ou 2 dias por semana</label>
+                        <label><input type="radio" name="q1" value="1"> Mais de 2 dias por semana</label>
+                        <label><input type="radio" name="q1" value="0"> Quase todos ou todos os dias</label>
+                    </div>
+                    
+                    <div class="pergunta"><p><b>3. Comichão no nariz?</b></p>
+                        <label><input type="radio" name="q2" value="3"> Nunca</label>
+                        <label><input type="radio" name="q2" value="2"> 1 ou 2 dias por semana</label>
+                        <label><input type="radio" name="q2" value="1"> Mais de 2 dias por semana</label>
+                        <label><input type="radio" name="q2" value="0"> Quase todos ou todos os dias</label>
+                    </div>
+                    
+                    <div class="pergunta"><p><b>4. Corrimento/pingo do nariz?</b></p>
+                        <label><input type="radio" name="q3" value="3"> Nunca</label>
+                        <label><input type="radio" name="q3" value="2"> 1 ou 2 dias por semana</label>
+                        <label><input type="radio" name="q3" value="1"> Mais de 2 dias por semana</label>
+                        <label><input type="radio" name="q3" value="0"> Quase todos ou todos os dias</label>
+                    </div>
+                    
+                    <div class="pergunta"><p><b>5. Falta de ar/dispneia?</b></p>
+                        <label><input type="radio" name="q4" value="3"> Nunca</label>
+                        <label><input type="radio" name="q4" value="2"> 1 ou 2 dias por semana</label>
+                        <label><input type="radio" name="q4" value="1"> Mais de 2 dias por semana</label>
+                        <label><input type="radio" name="q4" value="0"> Quase todos ou todos os dias</label>
+                    </div>
+                    
+                    <div class="pergunta"><p><b>6. Chiadeira no peito/pieira?</b></p>
+                        <label><input type="radio" name="q5" value="3"> Nunca</label>
+                        <label><input type="radio" name="q5" value="2"> 1 ou 2 dias por semana</label>
+                        <label><input type="radio" name="q5" value="1"> Mais de 2 dias por semana</label>
+                        <label><input type="radio" name="q5" value="0"> Quase todos ou todos os dias</label>
+                    </div>
+                    
+                    <div class="pergunta"><p><b>7. Aperto no peito com esforço físico?</b></p>
+                        <label><input type="radio" name="q6" value="3"> Nunca</label>
+                        <label><input type="radio" name="q6" value="2"> 1 ou 2 dias por semana</label>
+                        <label><input type="radio" name="q6" value="1"> Mais de 2 dias por semana</label>
+                        <label><input type="radio" name="q6" value="0"> Quase todos ou todos os dias</label>
+                    </div>
+                    
+                    <div class="pergunta"><p><b>8. Cansaço / dificuldade em fazer as suas actividades ou tarefas do dia-a-dia?</b></p>
+                        <label><input type="radio" name="q7" value="3"> Nunca</label>
+                        <label><input type="radio" name="q7" value="2"> 1 ou 2 dias por semana</label>
+                        <label><input type="radio" name="q7" value="1"> Mais de 2 dias por semana</label>
+                        <label><input type="radio" name="q7" value="0"> Quase todos ou todos os dias</label>
+                    </div>
+                    
+                    <div class="pergunta"><p><b>9. Acordou durante a noite?</b></p>
+                        <label><input type="radio" name="q8" value="3"> Nunca</label>
+                        <label><input type="radio" name="q8" value="2"> 1 ou 2 dias por semana</label>
+                        <label><input type="radio" name="q8" value="1"> Mais de 2 dias por semana</label>
+                        <label><input type="radio" name="q8" value="0"> Quase todos ou todos os dias</label>
+                    </div>
+
+                    <p style="color: #555; margin-top: 10px;">Nas últimas <u>4 semanas</u>, <b>quantas vezes teve de:</b></p>
+                    
+                    <div class="pergunta"><p><b>10. Aumentar a utilização dos seus medicamentos por causa das suas doenças alérgicas respiratórias (asma/rinite/alergia)?</b></p>
+                        <label><input type="radio" name="q9" value="3"> Não estou a tomar medicamentos</label>
+                        <label><input type="radio" name="q9" value="3"> Nunca</label>
+                        <label><input type="radio" name="q9" value="2"> Menos de 7 dias</label>
+                        <label><input type="radio" name="q9" value="1"> 7 ou mais dias</label>
+                    </div> 
+
+                    <button type="submit" style="background-color: #1a73e8; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; width: 200px;">
+                        Submeter Questionário
+                    </button>
+                </form>
+
+                <div id="resultado-carat" style="display:none; margin-top: 24px; padding: 20px; background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px;">
+                    <h3 style="color: #166534; margin-bottom: 12px;">Resultado da Avaliação</h3>
+                    <p id="resultado-geral" style="font-weight: bold; color: #166534;"></p>
+                    <p id="resultado-rinite" style="color: #15803d; margin-top: 8px;"></p>
+                    <p id="resultado-asma" style="color: #15803d;"></p>
+                    <ul id="lista-recomendacoes" style="color: #15803d; margin-top: 12px; padding-left: 20px;"></ul>
+                </div>
             </div>
 
-            <div id="seccao-historico-carat" class="seccao-conteudo" style="display: none;">
+            <div id="seccao-hist-carat" class="seccao-conteudo" style="display: none;">
+                <button class="btn-voltar">⬅ Voltar ao Início</button>
                 <h2>Histórico CARAT</h2>
-                <div id="tabela-historico-carat-container">
-                    <p style="color: #888;">A carregar histórico...</p>
-                </div>
+                <p style="color: #888; margin-top:10px;">Em desenvolvimento...</p>
             </div>
 
         </section>
