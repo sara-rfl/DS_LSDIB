@@ -3,6 +3,7 @@ interface LoginResponse {
     perfil: 'UTENTE' | 'MEDICO' | 'ADMINISTRADOR';
     nome: string;
     id: number;
+    utenteId?: number; 
     mensagem?: string; 
 }
 
@@ -32,12 +33,18 @@ loginForm?.addEventListener('submit', async (event: Event) => {
         // Converte a resposta forçando o contrato LoginResponse
         const data = await response.json() as LoginResponse;
 
+        console.log("INFO DO BACKEND:", data);
+
         if (response.ok) {
             // Guarda a informação crítica no LocalStorage para uso futuro
             localStorage.setItem('token', data.token);
             localStorage.setItem('perfil', data.perfil);
             localStorage.setItem('nome', data.nome);
             localStorage.setItem('userId', data.id.toString());
+
+            if (data.utenteId) {
+                localStorage.setItem('utenteId', data.utenteId.toString());
+            }
 
             switch (data.perfil.toLowerCase()) {
                 case 'utente':

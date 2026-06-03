@@ -39,7 +39,9 @@ async function carregarUtentes() {
     
         todosUtentes = await resposta.json();
 
-    
+        const contagem = document.getElementById('contagem-utentes');
+        if (contagem) contagem.textContent = `${todosUtentes.length} utentes`;
+
         desenharTabela(todosUtentes);
 
     } catch (erro) {
@@ -54,32 +56,45 @@ function desenharTabela(lista: any[]) {
     if (!container) return;
 
     if (lista.length === 0) {
-        container.innerHTML = '<p>Nenhum paciente encontrado.</p>';
+        container.innerHTML = '<p class="estado-mensagem">Nenhum paciente encontrado.</p>';
         return;
     }
 
+    const badgeClass: Record<string, string> = {
+        medico: 'badge-medico',
+        admin: 'badge-admin',
+        utente: 'badge-utente',
+    };
+
     let htmlTabela = `
-        <table style="width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left;">
-            <tr style="background-color: #f8f9fa; border-bottom: 2px solid #dcdcdc;">
-                <th style="padding: 12px;">Nome</th>
-                <th style="padding: 12px;">Email</th>
-                <th style="padding: 12px;">Perfil</th>
-            </tr>
+        <table class="tabela-utentes">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Perfil</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
     `;
 
     lista.forEach((utente: any) => {
-        const perfilCorreto = utente.role || utente.perfil || 'Sem perfil';
+        const perfil = utente.role || utente.perfil || 'outro';
+        const classe = badgeClass[perfil.toLowerCase()] || 'badge-default';
+        const iniciais = utente.nome.split(' ').map((p: string) => p[0]).slice(0, 2).join('').toUpperCase();
 
         htmlTabela += `
-            <tr style="border-bottom: 1px solid #eee;">
-                <td style="padding: 12px;">${utente.nome}</td>
-                <td style="padding: 12px;">${utente.email}</td>
-                <td style="padding: 12px;">${perfilCorreto}</td>
+            <tr>
+                <td><div class="td-nome"><span class="avatar">${iniciais}</span>${utente.nome}</div></td>
+                <td>${utente.email}</td>
+                <td><span class="badge ${classe}">${perfil}</span></td>
+                <td><button class="btn-ver">Ver detalhes</button></td>
             </tr>
         `;
     });
 
-    htmlTabela += '</table>';
+    htmlTabela += '</tbody></table>';
     container.innerHTML = htmlTabela;
 }
 // ---------------------------------------------------------

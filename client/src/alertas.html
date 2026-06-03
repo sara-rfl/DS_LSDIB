@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iCARAT - Painel de Alertas</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <nav class="top-nav">
+        <h2 class="logo">iCARAT</h2>
+        <div style="display:flex; gap:12px; align-items:center;">
+            <button onclick="window.location.href='lista_utentes.html'" class="btn-ver">← Utentes</button>
+            <button id="btn-logout" class="btn-move-out">Log Out</button>
+        </div>
+    </nav>
+
+    <main class="container-lista">
+        <div class="header-lista">
+            <div class="header-esquerda">
+                <h1>Painel de Alertas</h1>
+                <span id="contagem-alertas" class="contagem-badge">—</span>
+            </div>
+            <select id="filtro-estado" class="search-input" style="width:200px;">
+                <option value="">Todos os estados</option>
+                <option value="Novo">Novo</option>
+                <option value="Visto">Visto</option>
+                <option value="Em_Seguimento">Em Seguimento</option>
+                <option value="Fechado">Fechado</option>
+            </select>
+        </div>
+
+        <div id="tabela-container" class="card-tabela">
+            <p class="estado-mensagem">A carregar alertas...</p>
+        </div>
+    </main>
+
+    <script type="module" src="./pages/alertas.js"></script>
+</body>
+</html>
