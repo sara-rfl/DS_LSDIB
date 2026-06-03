@@ -5,6 +5,7 @@ import { autorizar } from '../middleware/authorizationMiddleware';
 
 const router = Router();
 
+router.get('/users', autenticar, autorizar('admin'), userController.listar);
 router.patch('/users/:id/role', autenticar, autorizar('admin'), userController.alterarPerfil);
 
 export default router;

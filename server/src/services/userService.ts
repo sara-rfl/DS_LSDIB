@@ -2,6 +2,10 @@ import db from '../config/database';
 
 const PERFIS_VALIDOS = ['utente', 'medico', 'admin'];
 
+export function listarTodos() {
+  return db.prepare('SELECT id, nome, email, perfil, criadoEm FROM utilizador ORDER BY criadoEm DESC').all();
+}
+
 export function alterarPerfil(id: number, perfil: string) {
   if (!PERFIS_VALIDOS.includes(perfil)) {
     const erro: any = new Error(`Perfil inválido. Valores aceites: ${PERFIS_VALIDOS.join(', ')}`);

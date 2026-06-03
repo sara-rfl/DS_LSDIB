@@ -1,6 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 import * as userService from '../services/userService';
 
+export function listar(req: Request, res: Response, next: NextFunction) {
+  try {
+    res.json(userService.listarTodos());
+  } catch (erro) { next(erro); }
+}
+
 export function alterarPerfil(req: Request, res: Response, next: NextFunction) {
   try {
     const { perfil } = req.body;

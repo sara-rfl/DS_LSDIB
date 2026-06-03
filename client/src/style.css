@@ -1,83 +1,133 @@
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f0f4f8; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-  .login-container {
-    background-color: #ffffff;
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-    width: 100%;
-    max-width: 400px;
-    text-align: center;
-  }
+body {
+  font-family: Gill Sans,Gill Sans MT,Calibri,sans-serif;
+  background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 50%, #1565c0 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
 
-  .login-container h1 {
-    color: #2c3e50;
-    margin-bottom: 10px;
-    font-size: 24px;
-  }
+.login-container {
+  background: #ffffff;
+  padding: 48px 44px;
+  border-radius: 20px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
 
-  .login-container p {
-    color: #7f8c8d;
-    margin-bottom: 30px;
-    font-size: 14px;
-  }
+.login-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #1a73e8, #42a5f5);
+}
 
-  input[type="email"],
-  input[type="password"] {
-    width: 100%;
-    padding: 12px 15px;
-    margin-bottom: 20px;
-    border: 1px solid #dcdcdc;
-    border-radius: 6px;
-    font-size: 15px;
-    outline: none;
-    transition: border-color 0.3s;
-  }
+.login-container h1 {
+  color: #1a1a2e;
+  margin-bottom: 8px;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
 
-  input[type="email"]:focus,
-  input[type="password"]:focus {
-    border-color: #3498db;
-    box-shadow: 0 0 5px rgba(52, 152, 219, 0.2);
-  }
+.login-container > p {
+  color: #6b7280;
+  margin-bottom: 36px;
+  font-size: 14px;
+}
 
-  button {
-    width: 100%;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    padding: 14px;
-    border-radius: 6px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.1s;
-  }
+form div {
+  text-align: left;
+  margin-bottom: 20px;
+}
 
-  button:hover {
-    background-color: #2980b9;
-    transform: translateY(-2px);
-  }
+form div label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
 
-  button:active {
-    transform: translateY(0);
-  }
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: inherit;
+  background: #f9fafb;
+  color: #111827;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
 
-  .error-message {
-    color: #e74c3c;
-    font-size: 14px;
-    margin-top: 15px;
-    display: none;
-  }
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: #1a73e8;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.12);
+}
+
+input[type="email"]::placeholder,
+input[type="password"]::placeholder {
+  color: #9ca3af;
+}
+
+button {
+  width: 100%;
+  background: linear-gradient(135deg, #1a73e8, #1565c0);
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  margin-top: 8px;
+  letter-spacing: 0.3px;
+  transition: transform 0.15s, box-shadow 0.15s, filter 0.15s;
+  box-shadow: 0 4px 14px rgba(26, 115, 232, 0.4);
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(26, 115, 232, 0.45);
+  filter: brightness(1.05);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 10px rgba(26, 115, 232, 0.3);
+}
+
+.error-message {
+  color: #dc2626;
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 16px;
+  padding: 10px 14px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  display: none;
+}

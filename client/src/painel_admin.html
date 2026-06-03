@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iCARAT - Painel Admin</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body class="background">
+    <nav class="top-nav">
+        <h2 class="logo">iCARAT</h2>
+        <div style="display:flex; gap:12px; align-items:center;">
+            <a href="auditoria.html" class="btn-auditoria">Ver Auditoria</a>
+            <button id="btn-logout" class="btn-move-out">Log Out</button>
+        </div>
+    </nav>
+
+    <main class="container-lista">
+
+        <!-- STATS -->
+        <div class="stats-grid" id="stats-grid">
+            <div class="stat-card">
+                <span class="stat-valor" id="stat-total">—</span>
+                <span class="stat-label">Total de Utilizadores</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-valor" id="stat-utentes">—</span>
+                <span class="stat-label">Utentes</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-valor" id="stat-medicos">—</span>
+                <span class="stat-label">Médicos</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-valor" id="stat-admins">—</span>
+                <span class="stat-label">Administradores</span>
+            </div>
+        </div>
+
+        <!-- TABS -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="utilizadores">Utilizadores</button>
+            <button class="tab-btn" data-tab="configs">Configurações do Sistema</button>
+        </div>
+
+        <!-- TAB: UTILIZADORES -->
+        <div id="tab-utilizadores" class="tab-content">
+            <div class="header-lista">
+                <div class="header-esquerda">
+                    <h1>Utilizadores</h1>
+                    <span id="contagem-users" class="contagem-badge">—</span>
+                </div>
+                <input type="text" id="pesquisa-users" class="search-input" placeholder="Pesquisar por nome ou email...">
+            </div>
+            <div id="tabela-users" class="card-tabela">
+                <p class="estado-mensagem">A carregar utilizadores...</p>
+            </div>
+        </div>
+
+        <!-- TAB: CONFIGS -->
+        <div id="tab-configs" class="tab-content" style="display:none;">
+            <div class="header-lista">
+                <div class="header-esquerda">
+                    <h1>Configurações do Sistema</h1>
+                </div>
+            </div>
+            <div id="tabela-configs" class="card-tabela">
+                <p class="estado-mensagem">A carregar configurações...</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- MODAL ALTERAR PERFIL -->
+    <div id="modal-perfil" class="modal-overlay" style="display:none;">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-avatar" id="modal-perfil-avatar"></div>
+                <div>
+                    <h2 id="modal-perfil-nome"></h2>
+                    <p id="modal-perfil-email"></p>
+                </div>
+                <button id="modal-perfil-fechar" class="modal-fechar">&times;</button>
+            </div>
+            <div class="modal-body" style="grid-template-columns:1fr;">
+                <div class="modal-campo">
+                    <span class="modal-label">Perfil atual</span>
+                    <span id="modal-perfil-atual" class="modal-valor"></span>
+                </div>
+                <div class="modal-campo">
+                    <span class="modal-label">Alterar para</span>
+                    <select id="modal-perfil-select" class="perfil-select">
+                        <option value="utente">Utente</option>
+                        <option value="medico">Médico</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+                <button id="modal-perfil-guardar" class="btn-guardar">Guardar Alteração</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./pages/painel_admin.js"></script>
+</body>
+</html>
