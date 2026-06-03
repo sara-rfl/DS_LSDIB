@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema SauDInoB - Portal do Utente</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <nav class="top-nav">
+        <h2 class="logo">Sistema SauDInoB - Portal do Utente</h2>
+        <button id="btn-logout" class="btn-move-out">log out</button>
+    </nav>
+
+    <main class="dashboard-layout">
+        
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="active" id="menu-perfil">O Meu Perfil</li>
+                <li id="menu-sintomas">Consultar Sintomas</li>
+                <li id="menu-medicacao">Consultar Medicação</li>
+            </ul>
+        </aside>
+
+        <section class="content-area">
+            
+            <div id="seccao-perfil" class="seccao-conteudo">
+                <p>A carregar os teus dados da clínica...</p>
+            </div>
+
+            <div id="seccao-sintomas" class="seccao-conteudo" style="display: none;">
+                <h2>Histórico de Sintomas</h2>
+                <div id="tabela-sintomas-container">
+                    <p style="color: #888;">A carregar registos clínicos...</p>
+                </div>
+            </div>
+
+            <div id="seccao-medicacao" class="seccao-conteudo" style="display: none;">
+                <h2>Plano de Medicação Ativo</h2>
+                <div id="tabela-medicacao-container">
+                    <p style="color: #888;">A carregar prescrições médicas...</p>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <script type="module" src="./pages/dashboard_utente.js"></script>
+</body>
+</html>
