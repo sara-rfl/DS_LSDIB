@@ -253,6 +253,7 @@ DS_LSDIB/
 │   │   ├── routes/              # definição dos endpoints REST
 │   │   ├── controllers/         # recebe pedidos HTTP, delega nos services
 │   │   ├── services/            # lógica de negócio (CARAT, alertas, regras)
+│   │   ├── repositories/        # acesso a dados e queries SQLite
 │   │   ├── mappers/             # conversão para formato FHIR
 │   │   └── middleware/          # autenticação JWT, autorização por perfil,
 │   │                            # auditoria, validação de schema, logging

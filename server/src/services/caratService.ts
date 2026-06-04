@@ -1,4 +1,4 @@
-import { getUltimaAvaliacao, getDelta } from './caratRepository';
+import { getUltimaAvaliacao, getDelta } from '../repositories/caratRepository';
 
 export function calcularScores(respostas: number[]) {
     const scoreRinite = respostas.slice(0, 4).reduce((sum, val) => sum + val, 0);

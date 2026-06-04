@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { processarAvaliacao } from '../services/caratService';
-import { guardarAvaliacao, getHistorico, getAvaliacaoById } from '../services/caratRepository';
+import { guardarAvaliacao, getHistorico, getAvaliacaoById } from '../repositories/caratRepository';
 import { gerarAlertas } from '../services/alertaEngine';
-import { guardarAlerta, getMedicoDoUtente, temMedicacaoAtiva, fecharPedidosCaratPendentes } from '../services/alertaRepository';
+import { guardarAlerta, getMedicoDoUtente, temMedicacaoAtiva, fecharPedidosCaratPendentes } from '../repositories/alertaRepository';
 import { obterUtente } from '../services/patientService';
 
 export function submeter(req: Request, res: Response, next: NextFunction) {

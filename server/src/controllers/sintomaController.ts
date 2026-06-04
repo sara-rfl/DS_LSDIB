@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { obterUtente } from '../services/patientService';
-import { guardarSintoma, listarSintomas } from '../services/sintomaRepository';
+import { guardarSintoma, listarSintomas } from '../repositories/sintomaRepository';
 
 
 export function submeter(req: Request, res: Response, next: NextFunction) {

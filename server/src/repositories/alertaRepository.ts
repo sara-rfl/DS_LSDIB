@@ -1,5 +1,5 @@
 import db from '../config/database';
-import { AlertaCandidato } from './alertaEngine';
+import { AlertaCandidato } from '../services/alertaEngine';
 
 export function guardarAlerta(alerta: AlertaCandidato): number {
     const agora = new Date().toISOString();

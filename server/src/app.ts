@@ -35,8 +35,8 @@ app.use(sintomaRoutes);
 app.use(medicacaoRoutes);
 app.use(notaRoutes);
 app.use(exameRoutes);
-app.use(errorHandler);
 app.use(fhirRoutes);
+app.use(errorHandler);
 
 if (process.env.NODE_ENV !== 'test') {
     const PORT = process.env.PORT || 3000;
