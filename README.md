@@ -105,7 +105,7 @@ Usa uma base de dados separada (`tests/test.db`) que é criada e destruída auto
 
 | Ficheiro | O que testa |
 |---|---|
-| `tests/integration/api.test.ts` | Login (credenciais válidas e inválidas), submissão CARAT com verificação de scores, listagem de alertas com e sem token |
+| `tests/integration/api.test.ts` | Login (credenciais válidas e inválidas), submissão CARAT com verificação de scores, listagem de alertas com e sem token, e validação de estado de alerta |
 
 ---
 
@@ -116,7 +116,12 @@ A collection está em `postman/iCARAT.postman_collection.json`.
 Para usar:
 1. Importar o ficheiro no Postman.
 2. Fazer **POST `/auth/login`** com um dos pares email/password acima — o token é devolvido no campo `token` do corpo da resposta.
-3. Nas restantes requests, adicionar o header `Authorization: Bearer <token>`.
+3. Copiar o token e usar nas restantes requests com o header:
+   `Authorization: Bearer <token>`.
+4. Na collection já existem variáveis de ambiente para cada perfil:
+   - `{{tokenAdmin}}` para admin
+   - `{{tokenMedico}}` para médico
+   - `{{tokenUtente}}` para utente
 
 A collection cobre: Auth, Utentes, Médicos, CARAT, Alertas, FHIR e Config.
 
