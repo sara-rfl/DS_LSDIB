@@ -29,6 +29,32 @@ async function api(path, options = {}) {
     return res.status === 204 ? null : res.json();
 }
 
+function mostrarSucesso(mensagem) {
+    const toast = document.createElement('div');
+    toast.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #4CAF50; color: white; padding: 16px 24px; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); z-index: 10000; font-weight: 500;';
+    toast.textContent = '✓ ' + mensagem;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+function mostrarErro(mensagem) {
+    const toast = document.createElement('div');
+    toast.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #f44336; color: white; padding: 16px 24px; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); z-index: 10000; font-weight: 500;';
+    toast.textContent = '✗ Erro: ' + mensagem;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s';
+        setTimeout(() => toast.remove(), 300);
+    }, 4000);
+}
+
 // ── STATS ─────────────────────────────────────────────────
 async function carregarStats(users) {
     const total   = users.length;
@@ -282,6 +308,7 @@ document.getElementById('modal-medico-guardar')?.addEventListener('click', async
                     telefone:     document.getElementById('medico-telefone').value,
                 })
             });
+            mostrarSucesso('Médico atualizado com sucesso!');
         } else {
             await api('/doctors', {
                 method: 'POST',
@@ -294,12 +321,13 @@ document.getElementById('modal-medico-guardar')?.addEventListener('click', async
                     telefone:      document.getElementById('medico-telefone').value,
                 })
             });
+            mostrarSucesso('Médico criado com sucesso!');
         }
         document.getElementById('modal-medico').style.display = 'none';
         await carregarMedicos();
         await carregarUsers();
     } catch (err) {
-        alert('Erro ao guardar médico: ' + err.message);
+        mostrarErro('Guardar médico: ' + err.message);
     } finally {
         btn.disabled = false;
     }
@@ -449,6 +477,7 @@ document.getElementById('modal-utente-guardar')?.addEventListener('click', async
                     medicoId: document.getElementById('utente-medicoId').value || null,
                 })
             });
+            mostrarSucesso('Utente atualizado com sucesso!');
         } else {
             await api('/patients', {
                 method: 'POST',
@@ -464,12 +493,13 @@ document.getElementById('modal-utente-guardar')?.addEventListener('click', async
                     medicoId:       document.getElementById('utente-medicoId').value || null,
                 })
             });
+            mostrarSucesso('Utente criado com sucesso!');
         }
         document.getElementById('modal-utente').style.display = 'none';
         await carregarUtentesAdmin();
         await carregarUsers();
     } catch (err) {
-        alert('Erro ao guardar utente: ' + err.message);
+        mostrarErro('Guardar utente: ' + err.message);
     } finally {
         btn.disabled = false;
     }
@@ -487,12 +517,14 @@ function abrirModalEliminar(tipo, id, nome) {
         try {
             const rota = tipo === 'medico' ? `/doctors/${id}` : `/patients/${id}`;
             await api(rota, { method: 'DELETE' });
+            const tipoLabel = tipo === 'medico' ? 'Médico' : 'Utente';
+            mostrarSucesso(tipoLabel + ' eliminado com sucesso!');
             document.getElementById('modal-eliminar').style.display = 'none';
             if (tipo === 'medico') await carregarMedicos();
             else await carregarUtentesAdmin();
             await carregarUsers();
         } catch (err) {
-            alert('Erro ao eliminar: ' + err.message);
+            mostrarErro('Eliminar: ' + err.message);
         }
     };
 
