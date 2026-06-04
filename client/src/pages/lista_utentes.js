@@ -1,5 +1,4 @@
 "use strict";
-// 1. SEGURANÇA
 const token = localStorage.getItem('token');
 if (!token) {
     window.location.href = 'login.html';
@@ -11,10 +10,8 @@ if (btnLogout) {
         window.location.href = 'login.html';
     });
 }
-// ---------------------------------------------------------
-// VARIÁVEL GLOBAL
+
 let todosUtentes = [];
-// ---------------------------------------------------------
 async function carregarUtentes() {
     const container = document.getElementById('tabela-container');
     if (!container)
@@ -88,9 +85,7 @@ function desenharTabela(lista) {
         });
     });
 }
-// ---------------------------------------------------------
-// ---------------------------------------------------------
-// MODAL
+
 const overlay = document.getElementById('modal-overlay');
 const btnFechar = document.getElementById('modal-fechar');
 
@@ -126,8 +121,7 @@ async function abrirModal(id) {
         alert('Erro ao carregar detalhes do utente.');
     }
 }
-// ---------------------------------------------------------
-// FILTRO
+
 const inputPesquisa = document.getElementById('pesquisa-utente');
 if (inputPesquisa) {
     inputPesquisa.addEventListener('input', (evento) => {
