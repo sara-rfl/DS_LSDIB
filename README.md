@@ -259,7 +259,6 @@ DS_LSDIB/
 │   │   ├── unit/                # testes às funções de negócio isoladas
 │   │   ├── integration/         # testes HTTP end-to-end com supertest
 │   │   └── helpers/             # configuração do ambiente de teste
-│   └── public/                  # (não utilizado)
 ├── client/
 │   └── src/
 │       ├── views/               # páginas HTML (login, dashboard, CARAT, alertas, ...)
