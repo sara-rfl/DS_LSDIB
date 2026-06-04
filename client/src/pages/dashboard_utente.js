@@ -13,63 +13,115 @@ if (btnLogout) {
     });
 }
 
-// 2. LÓGICA DE NAVEGAÇÃO DOS CARTÕES E SECÇÕES
+// NAVEGAÇÃO POR SIDEBAR
+const todasSeccoes = ['inicio', 'perfil', 'sintomas', 'medicacao', 'carat-escolha', 'carat', 'hist-carat'];
 
-const seccaoInicio = document.getElementById('seccao-inicio');
-const seccaoPerfil = document.getElementById('seccao-perfil');
-const seccaoSintomas = document.getElementById('seccao-sintomas');
-const seccaoMedicacao = document.getElementById('seccao-medicacao');
-const seccaoCarat = document.getElementById('seccao-carat');
-const seccaoHistCarat = document.getElementById('seccao-hist-carat');
-const cardPerfil = document.getElementById('card-perfil');
-const cardSintomas = document.getElementById('card-sintomas');
-const cardMedicacao = document.getElementById('card-medicacao');
-const cardCarat = document.getElementById('card-carat');
-const cardHistCarat = document.getElementById('card-hist-carat');
-const botoesVoltar = document.querySelectorAll('.btn-voltar');
-function mostrarSeccao(seccaoAberta) {
-    if (seccaoInicio)
-        seccaoInicio.style.display = 'none';
-    if (seccaoPerfil)
-        seccaoPerfil.style.display = 'none';
-    if (seccaoSintomas)
-        seccaoSintomas.style.display = 'none';
-    if (seccaoMedicacao)
-        seccaoMedicacao.style.display = 'none';
-    if (seccaoCarat)
-        seccaoCarat.style.display = 'none';
-    if (seccaoHistCarat)
-        seccaoHistCarat.style.display = 'none';
-    if (seccaoAberta)
-        seccaoAberta.style.display = 'block';
+function mostrarSeccao(id, menuId) {
+    todasSeccoes.forEach(s => {
+        const el = document.getElementById(`seccao-${s}`);
+        if (el) el.style.display = 'none';
+    });
+    const alvo = document.getElementById(`seccao-${id}`);
+    if (alvo) alvo.style.display = 'block';
+
+    document.querySelectorAll('.sidebar-menu li').forEach(li => li.classList.remove('active'));
+    const menuAlvo = document.getElementById(menuId || `menu-${id}`);
+    if (menuAlvo) menuAlvo.classList.add('active');
 }
-if (cardPerfil)
-    cardPerfil.addEventListener('click', () => {
-        mostrarSeccao(seccaoPerfil);
-        carregarDadosPerfil();
-    });
-if (cardSintomas)
-    cardSintomas.addEventListener('click', () => {
-        mostrarSeccao(seccaoSintomas);
-        carregarSintomas();
-    });
-if (cardMedicacao)
-    cardMedicacao.addEventListener('click', () => {
-        mostrarSeccao(seccaoMedicacao);
-        carregarMedicacao();
-    });
-if (cardCarat)
-    cardCarat.addEventListener('click', () => mostrarSeccao(seccaoCarat));
-if (cardHistCarat)
-    cardHistCarat.addEventListener('click', () => {
-        mostrarSeccao(seccaoHistCarat);
-        carregarHistoricoCarat();
-    });
-botoesVoltar.forEach(btn => {
-    btn.addEventListener('click', () => mostrarSeccao(seccaoInicio));
+
+document.getElementById('menu-inicio')?.addEventListener('click', () => mostrarSeccao('inicio', 'menu-inicio'));
+document.getElementById('menu-perfil')?.addEventListener('click', () => { mostrarSeccao('perfil', 'menu-perfil'); carregarDadosPerfil(); });
+document.getElementById('menu-sintomas')?.addEventListener('click', () => { mostrarSeccao('sintomas', 'menu-sintomas'); carregarSintomas(); });
+document.getElementById('menu-medicacao')?.addEventListener('click', () => { mostrarSeccao('medicacao', 'menu-medicacao'); carregarMedicacao(); });
+document.getElementById('menu-carat')?.addEventListener('click', () => mostrarSeccao('carat-escolha', 'menu-carat'));
+
+// Página de escolha CARAT
+document.getElementById('btn-escolha-novo')?.addEventListener('click', () => mostrarSeccao('carat', 'menu-carat'));
+document.getElementById('btn-escolha-historico')?.addEventListener('click', () => { mostrarSeccao('hist-carat', 'menu-carat'); carregarHistoricoCarat(); });
+
+// Botões "← Voltar" dentro das secções CARAT
+document.querySelectorAll('.btn-voltar-carat').forEach(btn => {
+    btn.addEventListener('click', () => mostrarSeccao('carat-escolha', 'menu-carat'));
 });
 
+// Cards de resumo clicáveis
+document.getElementById('resumo-carat')?.addEventListener('click', () => { mostrarSeccao('hist-carat', 'menu-carat'); carregarHistoricoCarat(); });
+document.getElementById('resumo-medicacao')?.addEventListener('click', () => { mostrarSeccao('medicacao', 'menu-medicacao'); carregarMedicacao(); });
+document.getElementById('resumo-sintomas')?.addEventListener('click', () => { mostrarSeccao('sintomas', 'menu-sintomas'); carregarSintomas(); });
 
+
+
+// WELCOME HEADER + RESUMO
+async function carregarInicio() {
+    if (!utenteId) return;
+    const nome = localStorage.getItem('nome') || '—';
+    const iniciais = nome.split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase();
+    const navNome = document.getElementById('nav-nome');
+    if (navNome) navNome.textContent = nome;
+
+    const avatar = document.getElementById('welcome-avatar');
+    if (avatar) avatar.textContent = iniciais;
+    const welcomeNome = document.getElementById('welcome-nome');
+    if (welcomeNome) welcomeNome.textContent = `Olá, ${nome}`;
+
+    try {
+        const u = await fetch(`http://localhost:3000/patients/${utenteId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+        if (u.ok) {
+            const dados = await u.json();
+            const sub = document.getElementById('welcome-sub');
+            if (sub) sub.textContent = `Nº Utente: ${dados.nUtente || '—'} · Médico: Dr(a). ${dados.medicoNome || 'Não atribuído'}`;
+        }
+    } catch {}
+
+    // Resumo CARAT
+    try {
+        const rc = await fetch(`http://localhost:3000/patients/${utenteId}/carat`, { headers: { 'Authorization': `Bearer ${token}` } });
+        if (rc.ok) {
+            const lista = await rc.json();
+            const val = document.getElementById('resumo-carat-valor');
+            const det = document.getElementById('resumo-carat-detalhe');
+            if (lista.length > 0) {
+                const ultimo = lista[0];
+                const controlado = ultimo.scoreTotal > 24 || (ultimo.scoreRinite > 8 && ultimo.scoreAsma >= 16);
+                if (val) val.innerHTML = controlado
+                    ? `<span style="color:#065f46;">Controlado</span>`
+                    : `<span style="color:#991b1b;">Não Controlado</span>`;
+                if (det) det.textContent = `Score: ${ultimo.scoreTotal}/30 · ${new Date(ultimo.dataAvaliacao).toLocaleDateString('pt-PT')}`;
+            } else {
+                if (val) val.textContent = 'Sem avaliações';
+                if (det) det.textContent = 'Clique para preencher o questionário';
+            }
+        }
+    } catch {}
+
+    // Resumo Medicação
+    try {
+        const rm = await fetch(`http://localhost:3000/patients/${utenteId}/medicacao`, { headers: { 'Authorization': `Bearer ${token}` } });
+        if (rm.ok) {
+            const lista = await rm.json();
+            const hoje = new Date();
+            const ativas = lista.filter(m => !m.dataFim || new Date(m.dataFim) >= hoje).length;
+            const val = document.getElementById('resumo-med-valor');
+            const det = document.getElementById('resumo-med-detalhe');
+            if (val) val.textContent = ativas;
+            if (det) det.textContent = ativas === 1 ? '1 medicação ativa' : `${ativas} medicações ativas`;
+        }
+    } catch {}
+
+    // Resumo Sintomas
+    try {
+        const rs = await fetch(`http://localhost:3000/patients/${utenteId}/sintomas`, { headers: { 'Authorization': `Bearer ${token}` } });
+        if (rs.ok) {
+            const lista = await rs.json();
+            const limite = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+            const recentes = lista.filter(s => new Date(s.dataRegisto) >= limite).length;
+            const val = document.getElementById('resumo-sint-valor');
+            const det = document.getElementById('resumo-sint-detalhe');
+            if (val) val.textContent = recentes;
+            if (det) det.textContent = 'nos últimos 30 dias';
+        }
+    } catch {}
+}
 
 async function carregarDadosPerfil() {
     const container = document.getElementById('conteudo-perfil');
@@ -410,3 +462,4 @@ async function verificarPedidoCarat() {
 }
 
 verificarPedidoCarat();
+carregarInicio();
