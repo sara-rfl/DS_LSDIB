@@ -1,5 +1,4 @@
 "use strict";
-// Captura os elementos do DOM garantindo os tipos corretos
 const loginForm = document.getElementById('loginForm');
 const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
@@ -18,11 +17,9 @@ loginForm?.addEventListener('submit', async (event) => {
             },
             body: JSON.stringify({ email, password })
         });
-        // Converte a resposta forçando o contrato LoginResponse
         const data = await response.json();
         console.log("INFO DO BACKEND:", data);
         if (response.ok) {
-            // Guarda a informação crítica no LocalStorage para uso futuro
             localStorage.setItem('token', data.token);
             localStorage.setItem('perfil', data.perfil);
             localStorage.setItem('nome', data.nome);

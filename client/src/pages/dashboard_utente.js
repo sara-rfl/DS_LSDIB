@@ -1,5 +1,5 @@
 "use strict";
-// 1. SEGURANÇA E PREPARAÇÃO
+
 const token = localStorage.getItem('token');
 const utenteId = localStorage.getItem('utenteId');
 if (!token || !utenteId) {
@@ -12,9 +12,9 @@ if (btnLogout) {
         window.location.href = 'login.html';
     });
 }
-// ---------------------------------------------------------
+
 // 2. LÓGICA DE NAVEGAÇÃO DOS CARTÕES E SECÇÕES
-// ---------------------------------------------------------
+
 const seccaoInicio = document.getElementById('seccao-inicio');
 const seccaoPerfil = document.getElementById('seccao-perfil');
 const seccaoSintomas = document.getElementById('seccao-sintomas');
@@ -65,9 +65,9 @@ if (cardHistCarat)
 botoesVoltar.forEach(btn => {
     btn.addEventListener('click', () => mostrarSeccao(seccaoInicio));
 });
-// ---------------------------------------------------------
-// 3. COMUNICAR COM A API (PERFIL, SINTOMAS E MEDICAÇÃO)
-// ---------------------------------------------------------
+
+
+
 async function carregarDadosPerfil() {
     const container = document.getElementById('conteudo-perfil');
     if (!container || !utenteId)
@@ -280,9 +280,9 @@ async function carregarMedicacao() {
         container.innerHTML = '<p style="color: #e74c3c;">Os serviços clínicos não estão disponíveis de momento.</p>';
     }
 }
-// ---------------------------------------------------------
-// 4. LÓGICA DO QUESTIONÁRIO CARAT
-// ---------------------------------------------------------
+
+
+
 const formCarat = document.getElementById('form-carat');
 if (formCarat) {
     formCarat.addEventListener('submit', async (evento) => {
@@ -336,7 +336,7 @@ function mostrarResultadoCarat(resultado) {
     divResultado.scrollIntoView({ behavior: 'smooth' });
 }
 
-// ── PEDIDO CARAT ──────────────────────────────────────────
+
 async function verificarPedidoCarat() {
     if (!utenteId) return;
     try {
@@ -354,7 +354,7 @@ async function verificarPedidoCarat() {
                 });
             }
         }
-    } catch { /* silencioso — não bloqueia o dashboard */ }
+    } catch {}
 }
 
 verificarPedidoCarat();
