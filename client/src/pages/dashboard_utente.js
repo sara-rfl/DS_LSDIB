@@ -61,7 +61,10 @@ if (cardMedicacao)
 if (cardCarat)
     cardCarat.addEventListener('click', () => mostrarSeccao(seccaoCarat));
 if (cardHistCarat)
-    cardHistCarat.addEventListener('click', () => mostrarSeccao(seccaoHistCarat));
+    cardHistCarat.addEventListener('click', () => {
+        mostrarSeccao(seccaoHistCarat);
+        carregarHistoricoCarat();
+    });
 botoesVoltar.forEach(btn => {
     btn.addEventListener('click', () => mostrarSeccao(seccaoInicio));
 });
@@ -282,6 +285,55 @@ async function carregarMedicacao() {
 }
 
 
+
+async function carregarHistoricoCarat() {
+    const container = document.getElementById('container-historico-carat');
+    if (!container || !utenteId) return;
+    try {
+        const resposta = await fetch(`http://localhost:3000/patients/${utenteId}/carat`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!resposta.ok) throw new Error();
+        const lista = await resposta.json();
+
+        if (lista.length === 0) {
+            container.innerHTML = '<p class="estado-mensagem">Ainda não tens avaliações CARAT registadas.</p>';
+            return;
+        }
+
+        let html = `
+            <table class="tabela-utentes">
+                <thead><tr>
+                    <th>Data</th>
+                    <th>Score Rinite</th>
+                    <th>Score Asma</th>
+                    <th>Score Total</th>
+                    <th>Estado Geral</th>
+                </tr></thead>
+                <tbody>
+        `;
+        lista.forEach(av => {
+            const data = av.dataAvaliacao ? new Date(av.dataAvaliacao).toLocaleDateString('pt-PT') : '—';
+            const controlado = av.scoreTotal > 24 || (av.scoreRinite > 8 && av.scoreAsma >= 16);
+            const badge = controlado
+                ? `<span style="background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:600;">Controlado</span>`
+                : `<span style="background:#fef2f2;color:#991b1b;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:600;">Não Controlado</span>`;
+            html += `
+                <tr>
+                    <td>${data}</td>
+                    <td>${av.scoreRinite} / 12</td>
+                    <td>${av.scoreAsma} / 18</td>
+                    <td><strong>${av.scoreTotal} / 30</strong></td>
+                    <td>${badge}</td>
+                </tr>
+            `;
+        });
+        html += '</tbody></table>';
+        container.innerHTML = html;
+    } catch {
+        container.innerHTML = '<p class="error-message" style="display:block;">Erro ao carregar o histórico CARAT.</p>';
+    }
+}
 
 const formCarat = document.getElementById('form-carat');
 if (formCarat) {
