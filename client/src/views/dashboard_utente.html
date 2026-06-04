@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iCARAT - Portal do Utente</title>
     <link rel="stylesheet" href="../styles/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
     <nav class="top-nav">
@@ -87,6 +88,9 @@
                         </div>
                     </div>
                 </div>
+
+                <div id="alertas-inicio" style="margin-top:24px;display:flex;flex-direction:column;gap:12px;"></div>
+                <div id="recomendacoes-inicio" style="margin-top:16px;"></div>
 
             </div>
 
@@ -219,7 +223,13 @@
             <div id="seccao-hist-carat" class="seccao-conteudo" style="display:none;">
                 <button class="btn-voltar-carat btn-nav" style="margin-bottom:20px;">← Voltar</button>
                 <h2>Histórico CARAT</h2>
-                <div id="container-historico-carat" class="card-tabela" style="margin-top:20px;">
+                <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:20px 24px;margin-top:20px;margin-bottom:24px;">
+                    <p style="font-size:13px;font-weight:600;color:#6b7280;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em;">Evolução do Score Total</p>
+                    <div style="position:relative;height:280px;">
+                        <canvas id="grafico-carat"></canvas>
+                    </div>
+                </div>
+                <div id="container-historico-carat" class="card-tabela" style="margin-top:0;">
                     <p class="estado-mensagem">A carregar...</p>
                 </div>
             </div>

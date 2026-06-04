@@ -1,5 +1,7 @@
 "use strict";
 
+let chartCarat = null;
+
 const token = localStorage.getItem('token');
 const utenteId = localStorage.getItem('utenteId');
 if (!token || !utenteId) {
@@ -56,6 +58,7 @@ document.getElementById('resumo-sintomas')?.addEventListener('click', () => { mo
 // WELCOME HEADER + RESUMO
 async function carregarInicio() {
     if (!utenteId) return;
+    renderRecomendacoesInicio();
     const nome = localStorage.getItem('nome') || '—';
     const iniciais = nome.split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase();
     const navNome = document.getElementById('nav-nome');
@@ -93,6 +96,7 @@ async function carregarInicio() {
                 if (val) val.textContent = 'Sem avaliações';
                 if (det) det.textContent = 'Clique para preencher o questionário';
             }
+            renderAlertasInicio(lista);
         }
     } catch {}
 
@@ -419,6 +423,175 @@ async function carregarExamesUtente() {
     }
 }
 
+function interpretarScore(av) {
+    const riniteOk = av.scoreRinite > 8;
+    const asmaOk = av.scoreAsma >= 16;
+    if (riniteOk && asmaOk) return 'Rinite e asma controladas';
+    if (!riniteOk && !asmaOk) return 'Rinite e asma não controladas';
+    if (!riniteOk) return 'Rinite não controlada';
+    return 'Asma não controlada';
+}
+
+function analisarTendencia(lista) {
+    if (lista.length < 2) return 'sem dados';
+    const newest = lista[0].scoreTotal;
+    const ref = lista[Math.min(2, lista.length - 1)].scoreTotal;
+    const diff = newest - ref;
+    if (diff <= -3) return 'piora';
+    if (diff >= 3) return 'melhora';
+    return 'estavel';
+}
+
+function renderGraficoCarat(lista) {
+    const canvas = document.getElementById('grafico-carat');
+    if (!canvas || lista.length === 0) return;
+    if (chartCarat) { chartCarat.destroy(); chartCarat = null; }
+
+    const cronologico = [...lista].reverse();
+    const labels = cronologico.map(av => new Date(av.dataAvaliacao).toLocaleDateString('pt-PT'));
+    const scores = cronologico.map(av => av.scoreTotal);
+
+    chartCarat = new Chart(canvas, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: 'Score CARAT Total',
+                    data: scores,
+                    borderColor: '#1a73e8',
+                    backgroundColor: 'rgba(26,115,232,0.08)',
+                    tension: 0.3,
+                    fill: true,
+                    pointRadius: 6,
+                    pointBackgroundColor: scores.map(s => s > 24 ? '#16a34a' : '#dc2626'),
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                },
+                {
+                    label: 'Limiar de controlo (24/30)',
+                    data: labels.map(() => 24),
+                    borderColor: '#ef4444',
+                    borderDash: [6, 4],
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    fill: false,
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    min: 0,
+                    max: 30,
+                    title: { display: true, text: 'Score Total (/30)' },
+                    grid: { color: 'rgba(0,0,0,0.06)' }
+                },
+                x: {
+                    title: { display: true, text: 'Data da Avaliação' },
+                    grid: { display: false }
+                }
+            },
+            plugins: {
+                legend: { display: true, position: 'top' },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => {
+                            if (ctx.datasetIndex === 0) {
+                                return `Score: ${ctx.parsed.y}/30 — ${ctx.parsed.y > 24 ? 'Controlado' : 'Não controlado'}`;
+                            }
+                            return `Limiar: ${ctx.parsed.y}/30`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function renderRecomendacoesInicio() {
+    const container = document.getElementById('recomendacoes-inicio');
+    if (!container) return;
+
+    let dados;
+    try { dados = JSON.parse(localStorage.getItem('ultimasRecomendacoes') || ''); } catch { return; }
+    if (!dados || !dados.recomendacoes || dados.recomendacoes.length === 0) return;
+
+    const data = new Date(dados.data).toLocaleDateString('pt-PT');
+    container.innerHTML = `
+        <div style="background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:12px;padding:20px 24px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+                <p style="font-weight:700;color:#1d4ed8;font-size:15px;margin:0;">Recomendações da última avaliação CARAT</p>
+                <span style="font-size:12px;color:#6b7280;background:#dbeafe;padding:3px 10px;border-radius:20px;">${data}</span>
+            </div>
+            <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;">
+                ${dados.recomendacoes.map(r => `<li style="font-size:13px;color:#1e3a5f;">${r}</li>`).join('')}
+            </ul>
+            <p style="font-size:12px;color:#9ca3af;margin-top:12px;margin-bottom:0;">Lembrete válido até à próxima avaliação.</p>
+        </div>
+    `;
+}
+
+function renderAlertasInicio(lista) {
+    const container = document.getElementById('alertas-inicio');
+    if (!container || !lista || lista.length === 0) return;
+
+    const ultimo = lista[0];
+    const controlado = ultimo.scoreTotal > 24 || (ultimo.scoreRinite > 8 && ultimo.scoreAsma >= 16);
+    const tendencia = analisarTendencia(lista);
+
+    const alertas = [];
+
+    if (!controlado) {
+        alertas.push({
+            bg: '#fef2f2', borda: '#fca5a5', cor: '#dc2626',
+            icone: '⚠',
+            titulo: 'Doença não controlada',
+            mensagem: `Último score CARAT: ${ultimo.scoreTotal}/30. ${interpretarScore(ultimo)}.`,
+            acao: 'Contacte o seu médico para rever o plano de tratamento.'
+        });
+    }
+
+    if (tendencia === 'piora') {
+        alertas.push({
+            bg: '#fff7ed', borda: '#fed7aa', cor: '#ea580c',
+            icone: '↘',
+            titulo: 'Tendência de agravamento',
+            mensagem: 'Os seus scores CARAT têm vindo a diminuir nas últimas avaliações.',
+            acao: 'Marque uma consulta de acompanhamento em breve.'
+        });
+    } else if (controlado && tendencia === 'melhora') {
+        alertas.push({
+            bg: '#f0fdf4', borda: '#86efac', cor: '#16a34a',
+            icone: '↗',
+            titulo: 'A melhorar',
+            mensagem: `Score atual: ${ultimo.scoreTotal}/30. A sua doença está controlada e em melhoria.`,
+            acao: 'Continue a cumprir o plano de tratamento prescrito.'
+        });
+    } else if (controlado) {
+        alertas.push({
+            bg: '#f0fdf4', borda: '#86efac', cor: '#16a34a',
+            icone: '✓',
+            titulo: 'Doença controlada',
+            mensagem: `Score atual: ${ultimo.scoreTotal}/30. A sua doença está bem controlada.`,
+            acao: 'Mantenha o tratamento e compareça às consultas de rotina.'
+        });
+    }
+
+    container.innerHTML = alertas.map(a => `
+        <div style="display:flex;align-items:flex-start;gap:14px;background:${a.bg};border:1.5px solid ${a.borda};border-radius:12px;padding:16px 20px;">
+            <span style="font-size:20px;color:${a.cor};flex-shrink:0;margin-top:2px;">${a.icone}</span>
+            <div>
+                <p style="font-weight:700;color:${a.cor};margin-bottom:4px;">${a.titulo}</p>
+                <p style="font-size:13px;color:#374151;margin-bottom:4px;">${a.mensagem}</p>
+                <p style="font-size:13px;color:#6b7280;"><strong>O que fazer:</strong> ${a.acao}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
 async function carregarHistoricoCarat() {
     const container = document.getElementById('container-historico-carat');
     if (!container || !utenteId) return;
@@ -434,6 +607,8 @@ async function carregarHistoricoCarat() {
             return;
         }
 
+        renderGraficoCarat(lista);
+
         let html = `
             <table class="tabela-utentes">
                 <thead><tr>
@@ -441,7 +616,8 @@ async function carregarHistoricoCarat() {
                     <th>Score Rinite</th>
                     <th>Score Asma</th>
                     <th>Score Total</th>
-                    <th>Estado Geral</th>
+                    <th>Interpretação</th>
+                    <th>Estado</th>
                 </tr></thead>
                 <tbody>
         `;
@@ -457,6 +633,7 @@ async function carregarHistoricoCarat() {
                     <td>${av.scoreRinite} / 12</td>
                     <td>${av.scoreAsma} / 18</td>
                     <td><strong>${av.scoreTotal} / 30</strong></td>
+                    <td style="font-size:13px;color:#374151;">${interpretarScore(av)}</td>
                     <td>${badge}</td>
                 </tr>
             `;
@@ -494,6 +671,10 @@ if (formCarat) {
                 throw new Error('Erro ao submeter o questionário.');
             const resultado = await resposta.json();
             mostrarResultadoCarat(resultado);
+            localStorage.setItem('ultimasRecomendacoes', JSON.stringify({
+                data: new Date().toISOString(),
+                recomendacoes: resultado.recomendacoes || []
+            }));
             formCarat.reset();
         }
         catch (erro) {
