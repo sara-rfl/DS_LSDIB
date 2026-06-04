@@ -28,6 +28,7 @@
             <button class="tab-btn active" data-tab="sintomas">Sintomas</button>
             <button class="tab-btn" data-tab="medicacao">Medicação</button>
             <button class="tab-btn" data-tab="carat">Histórico CARAT</button>
+            <button class="tab-btn" data-tab="exames">Exames</button>
             <button class="tab-btn" data-tab="notas">Notas Clínicas</button>
         </div>
 
@@ -58,6 +59,21 @@
                 <button id="btn-pedir-carat" class="btn-nav">Solicitar Avaliação CARAT</button>
             </div>
             <div id="container-carat" class="card-tabela">
+                <p class="estado-mensagem">A carregar...</p>
+            </div>
+        </div>
+
+        <div id="tab-exames" class="tab-content" style="display:none;">
+            <div class="card-tabela" style="padding:24px;margin-bottom:20px;">
+                <h3 style="font-size:15px;font-weight:700;color:#1a1a2e;margin-bottom:16px;">Marcar Exame</h3>
+                <form id="form-exame" style="display:grid;grid-template-columns:2fr 1fr auto;gap:12px;align-items:end;">
+                    <div><label style="font-size:11px;font-weight:600;color:#6b7280;display:block;margin-bottom:4px;">Tipo de Exame</label><select id="exame-tipo" style="width:100%;padding:10px 14px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:14px;font-family:inherit;outline:none;"><option value="">A carregar...</option></select></div>
+                    <div><label style="font-size:11px;font-weight:600;color:#6b7280;display:block;margin-bottom:4px;">Data</label><input id="exame-data" type="date" style="width:100%;padding:10px 14px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:14px;font-family:inherit;outline:none;"></div>
+                    <button type="submit" class="btn-nav">Marcar</button>
+                </form>
+                <div style="margin-top:12px;"><label style="font-size:11px;font-weight:600;color:#6b7280;display:block;margin-bottom:4px;">Observações (opcional)</label><textarea id="exame-obs" rows="2" placeholder="Notas clínicas sobre o exame..." style="width:100%;padding:10px 14px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:14px;font-family:inherit;resize:vertical;outline:none;"></textarea></div>
+            </div>
+            <div id="container-exames" class="card-tabela">
                 <p class="estado-mensagem">A carregar...</p>
             </div>
         </div>

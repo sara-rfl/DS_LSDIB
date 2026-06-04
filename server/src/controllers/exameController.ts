@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { obterUtente } from '../services/patientService';
 import { getMedicoIdPorUtilizadorId } from '../services/doctorService';
-import { guardarExame, listarExames, tipoExameExiste } from '../services/exameRepository';
+import { guardarExame, listarExames, tipoExameExiste, atualizarExame, eliminarExame, listarTiposExame } from '../services/exameRepository';
 
 export function submeter(req: Request, res: Response, next: NextFunction) {
     try {
@@ -18,7 +18,7 @@ export function submeter(req: Request, res: Response, next: NextFunction) {
             return next(erro);
         }
 
-        guardarExame(utenteId, medicoId!, tipoExameIdNum, data, resultado, observacoes);
+        guardarExame(utenteId, medicoId!, tipoExameIdNum, data, resultado ?? null, observacoes ?? null);
         res.status(201).json({ message: 'Exame submetido com sucesso' });
     } catch (erro) { next(erro); }
 }
@@ -30,5 +30,28 @@ export function listar(req: Request, res: Response, next: NextFunction) {
         obterUtente(utenteId);
         const exames = listarExames(utenteId);
         res.json(exames);
+    } catch (erro) { next(erro); }
+}
+
+export function atualizar(req: Request, res: Response, next: NextFunction) {
+    try {
+        const exameId = Number(req.params.exameId);
+        const { resultado, observacoes } = req.body;
+        atualizarExame(exameId, resultado, observacoes ?? null);
+        res.json({ message: 'Exame atualizado com sucesso' });
+    } catch (erro) { next(erro); }
+}
+
+export function eliminar(req: Request, res: Response, next: NextFunction) {
+    try {
+        const exameId = Number(req.params.exameId);
+        eliminarExame(exameId);
+        res.status(204).send();
+    } catch (erro) { next(erro); }
+}
+
+export function listarTipos(req: Request, res: Response, next: NextFunction) {
+    try {
+        res.json(listarTiposExame());
     } catch (erro) { next(erro); }
 }

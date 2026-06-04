@@ -361,9 +361,143 @@ document.getElementById('form-nota').addEventListener('submit', async (e) => {
     }
 });
 
+// ── EXAMES ────────────────────────────────────────────────
+async function carregarTiposExame() {
+    const select = document.getElementById('exame-tipo');
+    if (!select) return;
+    const dataInput = document.getElementById('exame-data');
+    if (dataInput) dataInput.min = new Date().toISOString().split('T')[0];
+    try {
+        const r = await fetch('http://localhost:3000/tipoExame', { headers: { 'Authorization': `Bearer ${token}` } });
+        if (!r.ok) throw new Error();
+        const tipos = await r.json();
+        select.innerHTML = tipos.map(t => `<option value="${t.id}">${t.nome}</option>`).join('');
+    } catch { select.innerHTML = '<option value="">Erro ao carregar tipos</option>'; }
+}
+
+async function carregarExames() {
+    const container = document.getElementById('container-exames');
+    if (!container) return;
+    try {
+        const r = await fetch(`http://localhost:3000/patients/${utenteId}/exame`, { headers: { 'Authorization': `Bearer ${token}` } });
+        if (!r.ok) throw new Error();
+        const lista = await r.json();
+
+        if (lista.length === 0) {
+            container.innerHTML = '<p class="estado-mensagem">Sem exames registados.</p>';
+            return;
+        }
+
+        let html = `
+            <table class="tabela-utentes">
+                <thead><tr>
+                    <th>Tipo</th><th>Data</th><th>Resultado</th><th>Observações</th><th></th>
+                </tr></thead><tbody>
+        `;
+        lista.forEach(e => {
+            const data = e.data ? new Date(e.data).toLocaleDateString('pt-PT') : '—';
+            html += `
+                <tr id="row-exame-${e.id}">
+                    <td><strong>${e.tipoExameNome || '—'}</strong></td>
+                    <td>${data}</td>
+                    <td style="max-width:200px;font-size:13px;">${e.resultado || '<span style="background:#fff7ed;color:#c2410c;padding:2px 8px;border-radius:8px;font-size:12px;font-weight:600;">Pendente</span>'}</td>
+                    <td style="max-width:200px;font-size:13px;color:#6b7280;">${e.observacoes || '—'}</td>
+                    <td style="display:flex;gap:6px;">
+                        <button class="btn-ver btn-editar-exame" data-id="${e.id}" data-resultado="${(e.resultado||'').replace(/"/g,'&quot;')}" data-obs="${(e.observacoes||'').replace(/"/g,'&quot;')}">Editar</button>
+                        <button class="btn-ver btn-eliminar-exame" data-id="${e.id}" style="color:#dc2626;border-color:#fca5a5;">Eliminar</button>
+                    </td>
+                </tr>
+                <tr id="form-row-exame-${e.id}" style="display:none;">
+                    <td colspan="5" style="padding:16px 20px;background:#f8fafc;">
+                        <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end;">
+                            <div><label style="font-size:11px;font-weight:600;color:#6b7280;display:block;margin-bottom:4px;">Resultado</label><input class="edit-resultado" value="${(e.resultado||'').replace(/"/g,'&quot;')}" style="width:100%;padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:14px;font-family:inherit;"></div>
+                            <div><label style="font-size:11px;font-weight:600;color:#6b7280;display:block;margin-bottom:4px;">Observações</label><input class="edit-obs" value="${(e.observacoes||'').replace(/"/g,'&quot;')}" style="width:100%;padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:14px;font-family:inherit;"></div>
+                            <div style="display:flex;gap:6px;">
+                                <button class="btn-nav btn-guardar-exame" data-id="${e.id}" style="font-size:13px;padding:8px 14px;">Guardar</button>
+                                <button class="btn-ver btn-cancelar-exame" data-id="${e.id}" style="font-size:13px;padding:8px 14px;">Cancelar</button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+        html += '</tbody></table>';
+        container.innerHTML = html;
+
+        container.querySelectorAll('.btn-editar-exame').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                document.getElementById(`form-row-exame-${id}`).style.display = 'table-row';
+                btn.style.display = 'none';
+            });
+        });
+        container.querySelectorAll('.btn-cancelar-exame').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                document.getElementById(`form-row-exame-${id}`).style.display = 'none';
+                document.querySelector(`.btn-editar-exame[data-id="${id}"]`).style.display = '';
+            });
+        });
+        container.querySelectorAll('.btn-guardar-exame').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const id = btn.dataset.id;
+                const row = document.getElementById(`form-row-exame-${id}`);
+                const resultado = row.querySelector('.edit-resultado').value.trim();
+                const obs = row.querySelector('.edit-obs').value.trim() || null;
+                if (!resultado) { alert('O resultado é obrigatório.'); return; }
+                try {
+                    const r = await fetch(`http://localhost:3000/exame/${id}`, {
+                        method: 'PUT',
+                        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ resultado, observacoes: obs })
+                    });
+                    if (!r.ok) throw new Error();
+                    await carregarExames();
+                } catch { alert('Erro ao atualizar exame.'); }
+            });
+        });
+        container.querySelectorAll('.btn-eliminar-exame').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                if (!confirm('Tens a certeza que queres eliminar este exame?')) return;
+                try {
+                    const r = await fetch(`http://localhost:3000/exame/${btn.dataset.id}`, {
+                        method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (!r.ok) throw new Error();
+                    await carregarExames();
+                } catch { alert('Erro ao eliminar exame.'); }
+            });
+        });
+    } catch {
+        container.innerHTML = '<p class="error-message" style="display:block;">Erro ao carregar exames.</p>';
+    }
+}
+
+document.getElementById('form-exame')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const tipoExameId = document.getElementById('exame-tipo').value;
+    const data = document.getElementById('exame-data').value;
+    const observacoes = document.getElementById('exame-obs').value.trim() || null;
+    if (!tipoExameId || !data) { alert('Tipo e data são obrigatórios.'); return; }
+    try {
+        const r = await fetch(`http://localhost:3000/patients/${utenteId}/exame`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tipoExameId: Number(tipoExameId), data, observacoes })
+        });
+        if (!r.ok) throw new Error();
+        document.getElementById('exame-data').value = '';
+        document.getElementById('exame-obs').value = '';
+        await carregarExames();
+    } catch { alert('Erro ao marcar exame.'); }
+});
+
+carregarTiposExame();
+
 // ── INICIALIZAR ───────────────────────────────────────────
 carregarInfoUtente();
 carregarSintomas();
 carregarMedicacao();
 carregarCarat();
+carregarExames();
 carregarNotas();

@@ -14,7 +14,7 @@ if (btnLogout) {
 }
 
 // NAVEGAÇÃO POR SIDEBAR
-const todasSeccoes = ['inicio', 'perfil', 'sintomas', 'medicacao', 'carat-escolha', 'carat', 'hist-carat'];
+const todasSeccoes = ['inicio', 'perfil', 'sintomas', 'medicacao', 'exames', 'carat-escolha', 'carat', 'hist-carat'];
 
 function mostrarSeccao(id, menuId) {
     todasSeccoes.forEach(s => {
@@ -33,6 +33,8 @@ document.getElementById('menu-inicio')?.addEventListener('click', () => mostrarS
 document.getElementById('menu-perfil')?.addEventListener('click', () => { mostrarSeccao('perfil', 'menu-perfil'); carregarDadosPerfil(); });
 document.getElementById('menu-sintomas')?.addEventListener('click', () => { mostrarSeccao('sintomas', 'menu-sintomas'); carregarSintomas(); });
 document.getElementById('menu-medicacao')?.addEventListener('click', () => { mostrarSeccao('medicacao', 'menu-medicacao'); carregarMedicacao(); });
+document.getElementById('menu-exames')?.addEventListener('click', () => { mostrarSeccao('exames', 'menu-exames'); carregarExamesUtente(); });
+document.getElementById('btn-ir-exames-banner')?.addEventListener('click', () => { mostrarSeccao('exames', 'menu-exames'); carregarExamesUtente(); });
 document.getElementById('menu-carat')?.addEventListener('click', () => mostrarSeccao('carat-escolha', 'menu-carat'));
 
 // Página de escolha CARAT
@@ -105,6 +107,23 @@ async function carregarInicio() {
             const det = document.getElementById('resumo-med-detalhe');
             if (val) val.textContent = ativas;
             if (det) det.textContent = ativas === 1 ? '1 medicação ativa' : `${ativas} medicações ativas`;
+        }
+    } catch {}
+
+    // Banner + Resumo Exames Pendentes
+    try {
+        const re = await fetch(`http://localhost:3000/patients/${utenteId}/exame`, { headers: { 'Authorization': `Bearer ${token}` } });
+        if (re.ok) {
+            const listaExames = await re.json();
+            const pendentes = listaExames.filter(e => !e.resultado);
+            if (pendentes.length > 0) {
+                const banner = document.getElementById('banner-exames-pendentes');
+                if (banner) {
+                    banner.style.display = 'flex';
+                    const countEl = document.getElementById('banner-exames-count');
+                    if (countEl) countEl.textContent = pendentes.length;
+                }
+            }
         }
     } catch {}
 
@@ -337,6 +356,68 @@ async function carregarMedicacao() {
 }
 
 
+
+async function carregarExamesUtente() {
+    const container = document.getElementById('container-exames-utente');
+    if (!container || !utenteId) return;
+    try {
+        const r = await fetch(`http://localhost:3000/patients/${utenteId}/exame`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!r.ok) throw new Error();
+        const lista = await r.json();
+
+        if (lista.length === 0) {
+            container.innerHTML = '<p class="estado-mensagem">Sem exames registados.</p>';
+            return;
+        }
+
+        const pendentes = lista.filter(e => !e.resultado);
+        const realizados = lista.filter(e => e.resultado);
+
+        const renderTabela = (itens) => {
+            if (itens.length === 0) return '<p class="estado-mensagem" style="padding:16px;">Nenhum.</p>';
+            let html = `<table class="tabela-utentes"><thead><tr>
+                <th>Tipo</th><th>Data</th><th>Resultado</th><th>Observações</th>
+            </tr></thead><tbody>`;
+            itens.forEach(e => {
+                const data = e.data ? new Date(e.data).toLocaleDateString('pt-PT') : '—';
+                const resultado = e.resultado
+                    ? `<span style="font-size:13px;">${e.resultado}</span>`
+                    : `<span style="background:#fff7ed;color:#c2410c;padding:2px 8px;border-radius:8px;font-size:12px;font-weight:600;">Pendente</span>`;
+                html += `<tr>
+                    <td><strong>${e.tipoExameNome || '—'}</strong></td>
+                    <td>${data}</td>
+                    <td style="max-width:220px;">${resultado}</td>
+                    <td style="max-width:220px;font-size:13px;color:#6b7280;">${e.observacoes || '—'}</td>
+                </tr>`;
+            });
+            return html + '</tbody></table>';
+        };
+
+        let html = '';
+        if (pendentes.length > 0) {
+            html += `
+                <div style="padding:16px 20px 8px;display:flex;align-items:center;gap:10px;">
+                    <span style="background:#fff7ed;color:#c2410c;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:700;">● Agendados (${pendentes.length})</span>
+                </div>
+                ${renderTabela(pendentes)}
+            `;
+        }
+        if (realizados.length > 0) {
+            html += `
+                <div style="padding:${pendentes.length > 0 ? '20px' : '16px'} 20px 8px;display:flex;align-items:center;gap:10px;${pendentes.length > 0 ? 'border-top:1px solid #f3f4f6;' : ''}">
+                    <span style="background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:700;">✓ Realizados (${realizados.length})</span>
+                </div>
+                ${renderTabela(realizados)}
+            `;
+        }
+
+        container.innerHTML = html;
+    } catch {
+        container.innerHTML = '<p class="error-message" style="display:block;">Erro ao carregar exames.</p>';
+    }
+}
 
 async function carregarHistoricoCarat() {
     const container = document.getElementById('container-historico-carat');

@@ -48,11 +48,11 @@ export const submeterMedicacaoSchema = {
 
 export const submeterExameSchema = {
     type: 'object',
-    required: ['tipoExameId', 'data', 'resultado'],
+    required: ['tipoExameId', 'data'],
     properties: {
         tipoExameId: { type: 'integer', minimum: 1 },
         data: { type: 'string', format: 'date' },
-        resultado: { type: 'string', minLength: 1 },
+        resultado: { type: ['string', 'null'] },
         observacoes: { type: ['string', 'null'] }
     },
     additionalProperties: false

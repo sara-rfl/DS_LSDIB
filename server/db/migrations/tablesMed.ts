@@ -16,12 +16,13 @@ db.exec(`
 
     CREATE TABLE IF NOT EXISTS sintomaReportado (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    utenteId INTEGER,
+    utenteId INTEGER FOREIGN KEY,
     descricao TEXT,
     gravidade INTEGER CHECK(gravidade IN (1, 2, 3)),
     dataInicioSintoma DATE,
     dataRegisto   DATETIME,
     tipo        VARCHAR(50)
+    REFERENCES utente(id) ON DELETE SET NULL
     );
 
     CREATE TABLE IF NOT EXISTS medicacao (
