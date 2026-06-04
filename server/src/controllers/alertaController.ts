@@ -42,6 +42,12 @@ export function atualizarEstado(req: Request, res: Response, next: NextFunction)
             res.status(404).json({ message: 'Alerta não encontrado' });
             return;
         }
+
+        if (alerta.estado === 'Fechado' && novoEstado === 'Novo') {
+            res.status(400).json({ message: 'Não é possível reabrir um alerta fechado como Novo.' });
+            return;
+        }
+
         atualizarEstadoAlerta(Number(id), novoEstado);
         res.json({ mensagem: 'Estado atualizado' });
     }

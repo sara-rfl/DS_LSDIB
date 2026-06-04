@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs';
 
 // ─── Setup / Teardown ─────────────────────────────────────────────
 let token: string;
+let tokenUtente: string;
 
 beforeAll(async () => {
     db.exec(`
@@ -12,6 +13,9 @@ beforeAll(async () => {
         DROP TABLE IF EXISTS configuracaoLimiar;
         DROP TABLE IF EXISTS respostaCarat;
         DROP TABLE IF EXISTS avaliacaoCarat;
+        DROP TABLE IF EXISTS medicacao;
+        DROP TABLE IF EXISTS medico;
+        DROP TABLE IF EXISTS utente;
         DROP TABLE IF EXISTS utilizador;
 
         CREATE TABLE utilizador (
@@ -21,6 +25,23 @@ beforeAll(async () => {
             nome TEXT,
             perfil TEXT,
             criadoEm TEXT
+        );
+        CREATE TABLE medico (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            utilizadorId INTEGER,
+            especialidade TEXT,
+            telefone TEXT,
+            nrOrdem INTEGER
+        );
+        CREATE TABLE utente (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            utilizadorId INTEGER,
+            medicoId INTEGER,
+            nUtente INTEGER,
+            dataNascimento DATE,
+            telefone INTEGER,
+            morada TEXT,
+            genero VARCHAR(10)
         );
         CREATE TABLE avaliacaoCarat (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -44,6 +65,14 @@ beforeAll(async () => {
             valor NUMERIC,
             descricao TEXT
         );
+        CREATE TABLE medicacao (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            utenteId INTEGER,
+            nome TEXT,
+            dose TEXT,
+            dataInicio TEXT,
+            dataFim TEXT
+        );
         CREATE TABLE alerta (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             utenteId INTEGER,
@@ -59,8 +88,18 @@ beforeAll(async () => {
     `);
 
     const hash = bcrypt.hashSync('password123', 10);
+
     db.prepare(`INSERT INTO utilizador (email, passwordHash, nome, perfil, criadoEm) VALUES (?,?,?,?,?)`)
         .run('pedrocunha@clinic.pt', hash, 'Pedro Cunha', 'medico', new Date().toISOString());
+
+    db.prepare(`INSERT INTO utilizador (email, passwordHash, nome, perfil, criadoEm) VALUES (?,?,?,?,?)`)
+        .run('mariasilva@clinic.pt', hash, 'Maria Silva', 'utente', new Date().toISOString());
+
+    db.prepare(`INSERT INTO medico (utilizadorId, especialidade, telefone, nrOrdem) VALUES (?,?,?,?)`)
+        .run(1, 'Pneumonologia', '912345678', 12345);
+
+    db.prepare(`INSERT INTO utente (utilizadorId, medicoId, nUtente) VALUES (?,?,?)`)
+        .run(2, 1, 123456789);
 
     db.prepare(`INSERT INTO configuracaoLimiar (atualizadoPor, chave, valor, descricao) VALUES (?,?,?,?)`)
         .run(1, 'deltaDeterioracao', 4, 'Variação mínima para deterioração');
@@ -68,11 +107,15 @@ beforeAll(async () => {
     db.prepare(`INSERT INTO alerta (utenteId, medicoId, avaliacaoCaratId, tipo, prioridade, estado, motivo, atualizadoEm, criadoEm) VALUES (?,?,?,?,?,?,?,?,?)`)
         .run(1, 1, 1, 'DETERIORACAO_CLINICA', 1, 'Novo', 'Queda abrupta de score', '2026-05-01', '2026-05-01');
 
-    // Fazer login uma vez e guardar o token para todos os testes
     const res = await request(app)
         .post('/auth/login')
         .send({ email: 'pedrocunha@clinic.pt', password: 'password123' });
     token = res.body.token;
+
+    const resUtente = await request(app)
+        .post('/auth/login')
+        .send({ email: 'mariasilva@clinic.pt', password: 'password123' });
+    tokenUtente = resUtente.body.token;
 });
 
 // ─── Login ────────────────────────────────────────────────────────
@@ -97,13 +140,13 @@ describe('POST /auth/login', () => {
 });
 
 // ─── Submissão CARAT ──────────────────────────────────────────────
-describe('POST /api/carat/avaliacoes', () => {
+describe('POST /patients/:id/carat', () => {
 
     test('submissão válida → 201 + scores corretos', async () => {
         const res = await request(app)
-            .post('/api/carat/avaliacoes')
-            .set('Authorization', `Bearer ${token}`)
-            .send({ utenteId: 1, respostas: [2, 2, 2, 2, 3, 3, 3, 3, 3, 3] });
+            .post('/patients/1/carat')
+            .set('Authorization', `Bearer ${tokenUtente}`)
+            .send({ respostas: [2, 2, 2, 2, 3, 3, 3, 3, 3, 3] });
 
         expect(res.status).toBe(201);
         expect(res.body.scores.scoreRinite).toBe(8);
@@ -113,8 +156,8 @@ describe('POST /api/carat/avaliacoes', () => {
 
     test('sem token → 401', async () => {
         const res = await request(app)
-            .post('/api/carat/avaliacoes')
-            .send({ utenteId: 1, respostas: [2, 2, 2, 2, 3, 3, 3, 3, 3, 3] });
+            .post('/patients/1/carat')
+            .send({ respostas: [2, 2, 2, 2, 3, 3, 3, 3, 3, 3] });
         expect(res.status).toBe(401);
     });
 
@@ -138,6 +181,22 @@ describe('GET /api/alertas', () => {
         const res = await request(app)
             .get('/api/alertas');
         expect(res.status).toBe(401);
+    });
+
+    test('alerta fechado não pode ser reaberto como Novo', async () => {
+        const info = db.prepare(`INSERT INTO alerta (utenteId, medicoId, avaliacaoCaratId, tipo, prioridade, estado, motivo, atualizadoEm, criadoEm) VALUES (?,?,?,?,?,?,?,?,?)`)
+            .run(1, 1, 1, 'CONTROLO_INSUFICIENTE', 2, 'Fechado', 'Alerta já resolvido', '2026-05-02', '2026-05-02');
+
+        const res = await request(app)
+            .patch(`/api/alertas/${info.lastInsertRowid}`)
+            .set('Authorization', `Bearer ${token}`)
+            .send({ novoEstado: 'Novo' });
+
+        expect(res.status).toBe(400);
+        expect(res.body).toHaveProperty('message', 'Não é possível reabrir um alerta fechado como Novo.');
+
+        const alerta = db.prepare('SELECT estado FROM alerta WHERE id = ?').get(info.lastInsertRowid);
+        expect(alerta.estado).toBe('Fechado');
     });
 
 });

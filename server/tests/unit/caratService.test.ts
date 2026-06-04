@@ -29,11 +29,11 @@ describe('calcularScores', () => {
 // ─── interpretarNiveis ────────────────────────────────────────────
 describe('interpretarNiveis', () => {
 
-    test('Utente A avaliação 1 → CONTROLADO', () => {
-        const resultado = interpretarNiveis(8, 18, 26);
-        expect(resultado.geral).toBe('CONTROLADO');
+    test('Utente A avaliação 1 → NÃO CONTROLADO', () => {
+        const resultado = interpretarNiveis(8, 15, 23);
+        expect(resultado.geral).toBe('NÃO CONTROLADO');
         expect(resultado.rinite).toBe('Rinite Não Controlada');
-        expect(resultado.asma).toBe('Asma Controlada');
+        expect(resultado.asma).toBe('Asma Não Controlada');
     });
 
     test('Utente B → NÃO CONTROLADO', () => {
