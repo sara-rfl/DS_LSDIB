@@ -1,5 +1,6 @@
 import db from '../config/database';
 import bcrypt from 'bcryptjs';
+import { obterMedico } from './doctorService';
 
 export function listarUtentes() {
   return db.prepare(`
@@ -32,6 +33,7 @@ export function obterUtente(id: number) {
 
 export function criarUtente(dados: any) {
   const { nome, email, password, nUtente, dataNascimento, telefone, morada, genero, medicoId } = dados;
+  obterMedico(medicoId);
   const passwordHash = bcrypt.hashSync(password, 10);
   const criadoEm = new Date().toISOString();
 
@@ -59,6 +61,7 @@ export function atualizarUtente(id: number, dados: any) {
   const morada = dados.morada !== undefined ? dados.morada : utenteAtual.morada;
   const genero = dados.genero !== undefined ? dados.genero : utenteAtual.genero;
   const medicoId = dados.medicoId !== undefined ? dados.medicoId : utenteAtual.medicoId;
+  if (dados.medicoId !== undefined) obterMedico(medicoId);
 
   db.prepare(`
     UPDATE utente SET telefone = ?, morada = ?, genero = ?, medicoId = ?
@@ -73,4 +76,9 @@ export function eliminarUtente(id: number) {
   const utente = db.prepare('SELECT utilizadorId FROM utente WHERE id = ?').get(id) as any;
   db.prepare('DELETE FROM utente WHERE id = ?').run(id);
   db.prepare('DELETE FROM utilizador WHERE id = ?').run(utente.utilizadorId);
+}
+
+export function getUtenteIdPorUtilizadorId(utilizadorId: number): number | null {
+  const row = db.prepare('SELECT id FROM utente WHERE utilizadorId = ?').get(utilizadorId) as any;
+  return row?.id ?? null;
 }

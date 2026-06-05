@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { listarAlertas, getAlertaPorId, atualizarEstadoAlerta, adicionarAcaoAlerta, guardarAlerta } from '../repositories/alertaRepository';
+import { listarAlertas, getAlertaPorId, atualizarEstadoAlerta, adicionarAcaoAlerta, guardarAlerta, listarAcoesAlerta } from '../repositories/alertaRepository';
 import { getMedicoIdPorUtilizadorId } from '../services/doctorService'
 import { obterUtente } from '../services/patientService';
 
@@ -19,15 +19,14 @@ export function listar (req: Request, res: Response, next: NextFunction) {
 }
 
 export function obter (req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params;
-
     try {
-        const alertas = getAlertaPorId(parseInt(id as string));
-        if (!alertas) {
-            res.status(404).json({ message: 'Alerta não encontrado' });
-            return;
+        const alerta = getAlertaPorId(Number(req.params.id));
+        if (!alerta) {
+            const erro: any = new Error('Alerta não encontrado');
+            erro.status = 404;
+            return next(erro);
         }
-        res.json(alertas);
+        res.json(alerta);
     }
     catch (erro) { next(erro); }
 }
@@ -37,15 +36,17 @@ export function atualizarEstado(req: Request, res: Response, next: NextFunction)
     const { novoEstado } = req.body;
 
     try {
-        const alerta = getAlertaPorId(Number(id));
+        const alerta = getAlertaPorId(Number(id)) as any;
         if (!alerta) {
-            res.status(404).json({ message: 'Alerta não encontrado' });
-            return;
+            const erro: any = new Error('Alerta não encontrado');
+            erro.status = 404;
+            return next(erro);
         }
 
         if (alerta.estado === 'Fechado' && novoEstado === 'Novo') {
-            res.status(400).json({ message: 'Não é possível reabrir um alerta fechado como Novo.' });
-            return;
+            const erro: any = new Error('Não é possível reabrir um alerta fechado como Novo.');
+            erro.status = 400;
+            return next(erro);
         }
 
         atualizarEstadoAlerta(Number(id), novoEstado);
@@ -63,7 +64,6 @@ export function listarPorUtente(req: Request, res: Response, next: NextFunction)
     } catch (erro) { next(erro); }
 }
 
-
 export function adicionarAcao(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
     const utilizadorId = (req as any).utilizador.id;
@@ -73,8 +73,9 @@ export function adicionarAcao(req: Request, res: Response, next: NextFunction) {
     try {
         const alerta = getAlertaPorId(Number(id));
         if (!alerta) {
-            res.status(404).json({ message: 'Alerta não encontrado' });
-            return;
+            const erro: any = new Error('Alerta não encontrado');
+            erro.status = 404;
+            return next(erro);
         }
         adicionarAcaoAlerta(Number(id), medicoId!, descricao);
         res.json({ mensagem: 'Ação adicionada' });
@@ -106,7 +107,7 @@ export function criarPedidoCarat(req: Request, res: Response, next: NextFunction
             prioridade: 2,
             motivo: 'O seu médico solicita o preenchimento do questionário CARAT.'
         });
-        res.status(201).json({ message: 'Pedido de avaliação CARAT criado.' });
+        res.status(201).json({ mensagem: 'Pedido de avaliação CARAT criado.' });
     } catch (erro) { next(erro); }
 }
 
@@ -115,5 +116,18 @@ export function verificarPedidoCarat(req: Request, res: Response, next: NextFunc
         const utenteId = Number(req.params.id);
         const pendentes = listarAlertas({ utenteId, tipo: 'PEDIDO_CARAT', estado: 'Novo' });
         res.json({ temPedido: pendentes.length > 0 });
+    } catch (erro) { next(erro); }
+}
+
+export function listarAcoes(req: Request, res: Response, next: NextFunction) {
+    try {
+        const alertaId = Number(req.params.id);
+        const alerta = getAlertaPorId(alertaId);
+        if (!alerta) {
+            const erro: any = new Error('Alerta não encontrado');
+            erro.status = 404;
+            return next(erro);
+        }
+        res.json(listarAcoesAlerta(alertaId));
     } catch (erro) { next(erro); }
 }

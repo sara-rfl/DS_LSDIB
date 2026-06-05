@@ -18,7 +18,7 @@ export function submeter(req: Request, res: Response, next: NextFunction) {
         }
 
         guardarSintoma(utenteId, descricao, gravidade, dataInicioSintoma, tipo);
-        res.status(201).json({ message: 'Sintoma submetido com sucesso' });
+        res.status(201).json({ mensagem: 'Sintoma submetido com sucesso' });
     } catch (erro) { next(erro); }
 }
 

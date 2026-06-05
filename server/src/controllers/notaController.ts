@@ -13,7 +13,7 @@ export function submeter(req: Request, res: Response, next: NextFunction) {
         obterUtente(utenteId);
 
         guardarNota(utenteId, medicoId!, titulo ?? null, conteudo);
-        res.status(201).json({ message: 'Nota clínica registada com sucesso' });
+        res.status(201).json({ mensagem: 'Nota clínica registada com sucesso' });
     } catch (erro) { next(erro); }
 }
 

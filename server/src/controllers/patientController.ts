@@ -10,8 +10,7 @@ export function listar(req: Request, res: Response, next: NextFunction) {
 
 export function obter(req: Request, res: Response, next: NextFunction) {
   try {
-    const utente = patientService.obterUtente(Number(req.params.id));
-    res.json(utente);
+    res.json(patientService.obterUtente(Number(req.params.id)));
   } catch (erro) { next(erro); }
 }
 

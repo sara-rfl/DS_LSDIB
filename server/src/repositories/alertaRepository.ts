@@ -106,3 +106,14 @@ export function getAlertaPorId(alertaId: number) {
     return stmt.get(alertaId);
 }
 
+export function listarAcoesAlerta(alertaId: number) {
+    return db.prepare(`
+        SELECT aa.id, aa.alertaId, aa.descricao, aa.criadoEm, u.nome AS medicoNome
+        FROM acaoAlerta aa
+        JOIN medico m ON m.id = aa.medicoId
+        JOIN utilizador u ON u.id = m.utilizadorId
+        WHERE aa.alertaId = ?
+        ORDER BY aa.criadoEm ASC
+    `).all(alertaId);
+}
+

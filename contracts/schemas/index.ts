@@ -85,3 +85,83 @@ export const criarNotaSchema = {
     },
     additionalProperties: false
 } as const;
+
+export const criarMedicoSchema = {
+    type: 'object',
+    required: ['nome', 'email', 'password', 'especialidade', 'telefone', 'nrOrdem'],
+    properties: {
+        nome: { type: 'string', minLength: 1 },
+        email: { type: 'string', format: 'email' },
+        password: { type: 'string', minLength: 6 },
+        especialidade: { type: 'string', minLength: 1 },
+        telefone: { type: 'string', minLength: 1 },
+        nrOrdem: { type: 'string', minLength: 1 }
+    },
+    additionalProperties: false
+} as const;
+
+export const atualizarMedicoSchema = {
+    type: 'object',
+    properties: {
+        especialidade: { type: 'string', minLength: 1 },
+        telefone: { type: 'string', minLength: 1 },
+        nrOrdem: { type: 'string', minLength: 1 }
+    },
+    additionalProperties: false
+} as const;
+
+export const criarUtenteSchema = {
+    type: 'object',
+    required: ['nome', 'email', 'password', 'nUtente', 'dataNascimento', 'telefone', 'morada', 'genero', 'medicoId'],
+    properties: {
+        nome: { type: 'string', minLength: 1 },
+        email: { type: 'string', format: 'email' },
+        password: { type: 'string', minLength: 6 },
+        nUtente: { type: 'integer', minimum: 1 },
+        dataNascimento: { type: 'string', format: 'date' },
+        telefone: { type: 'string', minLength: 1 },
+        morada: { type: 'string', minLength: 1 },
+        genero: { type: 'string', enum: ['M', 'F'] },
+        medicoId: { type: 'integer', minimum: 1 }
+    },
+    additionalProperties: false
+} as const;
+
+export const atualizarUtenteSchema = {
+    type: 'object',
+    properties: {
+        telefone: { type: 'string', minLength: 1 },
+        morada: { type: 'string', minLength: 1 },
+        genero: { type: 'string', enum: ['M', 'F'] },
+        medicoId: { type: 'integer', minimum: 1 }
+    },
+    additionalProperties: false
+} as const;
+
+export const atualizarExameSchema = {
+    type: 'object',
+    properties: {
+        resultado: { type: ['string', 'null'] },
+        observacoes: { type: ['string', 'null'] }
+    },
+    additionalProperties: false
+} as const;
+
+export const atualizarConfigSchema = {
+    type: 'object',
+    required: ['chave', 'valor'],
+    properties: {
+        chave: { type: 'string', minLength: 1 },
+        valor: { type: 'number' }
+    },
+    additionalProperties: false
+} as const;
+
+export const alterarPerfilSchema = {
+    type: 'object',
+    required: ['perfil'],
+    properties: {
+        perfil: { type: 'string', enum: ['utente', 'medico', 'admin'] }
+    },
+    additionalProperties: false
+} as const;

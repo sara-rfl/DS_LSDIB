@@ -6,6 +6,14 @@ import { guardarExame, listarExames, tipoExameExiste, atualizarExame, eliminarEx
 export function submeter(req: Request, res: Response, next: NextFunction) {
     try {
         const { tipoExameId, data, resultado, observacoes } = req.body;
+
+        const hoje = new Date().toISOString().slice(0, 10);
+        if (data > hoje) {
+            const erro: any = new Error('A data do exame não pode ser no futuro');
+            erro.status = 400;
+            return next(erro);
+        }
+
         const tipoExameIdNum = Number(tipoExameId);
         const utilizadorId = (req as any).utilizador.id;
         const medicoId = getMedicoIdPorUtilizadorId(utilizadorId);
@@ -19,7 +27,7 @@ export function submeter(req: Request, res: Response, next: NextFunction) {
         }
 
         guardarExame(utenteId, medicoId!, tipoExameIdNum, data, resultado ?? null, observacoes ?? null);
-        res.status(201).json({ message: 'Exame submetido com sucesso' });
+        res.status(201).json({ mensagem: 'Exame submetido com sucesso' });
     } catch (erro) { next(erro); }
 }
 
@@ -38,7 +46,7 @@ export function atualizar(req: Request, res: Response, next: NextFunction) {
         const exameId = Number(req.params.exameId);
         const { resultado, observacoes } = req.body;
         atualizarExame(exameId, resultado, observacoes ?? null);
-        res.json({ message: 'Exame atualizado com sucesso' });
+        res.json({ mensagem: 'Exame atualizado com sucesso' });
     } catch (erro) { next(erro); }
 }
 
