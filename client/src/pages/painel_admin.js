@@ -172,9 +172,10 @@ document.getElementById('modal-perfil-guardar')?.addEventListener('click', async
             body: JSON.stringify({ perfil: novoPerfil })
         });
         document.getElementById('modal-perfil').style.display = 'none';
-        await carregarUsers();
+        mostrarSucesso('Perfil alterado com sucesso!');
+        await Promise.all([carregarUsers(), carregarMedicos(), carregarUtentesAdmin()]);
     } catch {
-        alert('Erro ao alterar o perfil.');
+        mostrarErro('Erro ao alterar o perfil.');
     }
 });
 

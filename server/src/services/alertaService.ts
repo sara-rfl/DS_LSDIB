@@ -32,3 +32,5 @@ export function regra4_indicacaoExame(
 ): boolean {
     return scoreTotal <= limiar;
 }
+
+
