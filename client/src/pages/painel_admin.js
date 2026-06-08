@@ -475,7 +475,7 @@ document.getElementById('modal-utente-guardar')?.addEventListener('click', async
                     telefone: document.getElementById('utente-telefone').value,
                     morada:   document.getElementById('utente-morada').value,
                     genero:   document.getElementById('utente-genero').value,
-                    medicoId: document.getElementById('utente-medicoId').value || null,
+                    medicoId: Number(document.getElementById('utente-medicoId').value) || null,
                 })
             });
             mostrarSucesso('Utente atualizado com sucesso!');
@@ -486,12 +486,12 @@ document.getElementById('modal-utente-guardar')?.addEventListener('click', async
                     nome:           document.getElementById('utente-nome').value,
                     email:          document.getElementById('utente-email').value,
                     password:       document.getElementById('utente-password').value,
-                    nUtente:        document.getElementById('utente-nUtente').value,
+                    nUtente:        Number(document.getElementById('utente-nUtente').value),
                     dataNascimento: document.getElementById('utente-dataNascimento').value,
                     telefone:       document.getElementById('utente-telefone').value,
                     morada:         document.getElementById('utente-morada').value,
                     genero:         document.getElementById('utente-genero').value,
-                    medicoId:       document.getElementById('utente-medicoId').value || null,
+                    medicoId:       Number(document.getElementById('utente-medicoId').value) || null,
                 })
             });
             mostrarSucesso('Utente criado com sucesso!');

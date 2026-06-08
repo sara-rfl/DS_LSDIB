@@ -121,7 +121,7 @@ export const criarUtenteSchema = {
         dataNascimento: { type: 'string', format: 'date' },
         telefone: { type: 'string', minLength: 1 },
         morada: { type: 'string', minLength: 1 },
-        genero: { type: 'string', enum: ['M', 'F'] },
+        genero: { type: 'string', enum: ['masculino', 'feminino'] },
         medicoId: { type: 'integer', minimum: 1 }
     },
     additionalProperties: false
@@ -132,7 +132,7 @@ export const atualizarUtenteSchema = {
     properties: {
         telefone: { type: 'string', minLength: 1 },
         morada: { type: 'string', minLength: 1 },
-        genero: { type: 'string', enum: ['M', 'F'] },
+        genero: { type: 'string', enum: ['masculino', 'feminino'] },
         medicoId: { type: 'integer', minimum: 1 }
     },
     additionalProperties: false
